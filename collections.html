@@ -4,8 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Collections</title>
-        <link rel="stylesheet" href="css/styles.css">
-        <script src="js/script.js" async defer></script>
+        <link rel="stylesheet" href="./css/styles.css">
     </head>
     <body>
         <div class="navbar">
@@ -19,6 +18,11 @@
             <h1>Photo Collections</h1>
             <p>Browse through my photography collections</p>
         </div>
-        <!-- The gallery will be automatically inserted here by JavaScript -->
+        <div id="gallery-mount-point">
+            <!-- The gallery will be automatically inserted here by JavaScript -->
+        </div>
+        
+        <!-- Move script to end of body and remove async defer -->
+        <script src="./js/script.js"></script>
     </body>
 </html>

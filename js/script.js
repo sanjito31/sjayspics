@@ -8,8 +8,14 @@ const galleryConfig = {
 // Image Gallery Class
 class ImageGallery {
     constructor() {
+        console.log('Gallery class instantiated');
         this.images = [];
         this.currentFilter = 'all';
+        this.mountPoint = document.getElementById('gallery-mount-point');
+        if (!this.mountPoint) {
+            console.error('Gallery mount point not found!');
+            return;
+        }
         this.initializeGallery();
     }
 
@@ -20,14 +26,9 @@ class ImageGallery {
             const galleryContainer = document.createElement('div');
             galleryContainer.className = 'gallery-container glass-effect';
             
-            // Insert after the title section
-            const titleSection = document.querySelector('.title');
-            if (titleSection) {
-                titleSection.after(galleryContainer);
-            } else {
-                console.error('Could not find title section to insert gallery');
-                document.body.appendChild(galleryContainer);
-            }
+            // Insert into mount point
+            this.mountPoint.appendChild(galleryContainer);
+            console.log('Gallery container mounted');
 
             // Create filter buttons
             this.createFilterButtons();
@@ -36,6 +37,7 @@ class ImageGallery {
             const imageGrid = document.createElement('div');
             imageGrid.className = 'image-grid';
             galleryContainer.appendChild(imageGrid);
+            console.log('Image grid created and appended');
 
             // Initialize lightbox
             this.initializeLightbox();
@@ -62,8 +64,13 @@ class ImageGallery {
                 filterContainer.appendChild(button);
             });
 
-            document.querySelector('.gallery-container').appendChild(filterContainer);
-            console.log('Filter buttons created successfully');
+            const galleryContainer = this.mountPoint.querySelector('.gallery-container');
+            if (galleryContainer) {
+                galleryContainer.appendChild(filterContainer);
+                console.log('Filter buttons created successfully');
+            } else {
+                console.error('Gallery container not found for filter buttons');
+            }
         } catch (error) {
             console.error('Error creating filter buttons:', error);
         }
@@ -71,21 +78,28 @@ class ImageGallery {
 
     async loadImages() {
         try {
-            console.log('Loading images...');
-            const imageGrid = document.querySelector('.image-grid');
+            console.log('Starting to load images...');
+            const imageGrid = this.mountPoint.querySelector('.image-grid');
+            if (!imageGrid) {
+                console.error('Image grid not found!');
+                return;
+            }
+            console.log('Image grid found, proceeding to load images');
             
             for (let i = 1; i <= 12; i++) {
+                console.log(`Creating wrapper for image ${i}`);
                 const imgWrapper = document.createElement('div');
                 imgWrapper.className = 'image-wrapper';
                 
                 const img = document.createElement('img');
-                img.src = `images/photo${i}.JPG`;
+                const imagePath = `./images/photo${i}.JPG`;
+                console.log(`Attempting to load image from: ${imagePath}`);
+                img.src = imagePath;
                 img.alt = `Photo ${i}`;
-                console.log(`Loading image: ${img.src}`);
                 
                 // Add error handling for image loading
                 img.onerror = () => {
-                    console.error(`Error loading image ${i}`);
+                    console.error(`Error loading image ${i} from path: ${imagePath}`);
                     imgWrapper.innerHTML = `<div class="error-message">Error loading image ${i}</div>`;
                     imgWrapper.classList.add('error');
                 };
@@ -95,7 +109,7 @@ class ImageGallery {
                 // Add loading state
                 img.style.opacity = '0';
                 img.onload = () => {
-                    console.log(`Image ${i} loaded successfully`);
+                    console.log(`Image ${i} loaded successfully from: ${imagePath}`);
                     imgWrapper.classList.add('loaded');
                     img.style.transition = `opacity ${galleryConfig.animationDuration}ms ease-in-out`;
                     img.style.opacity = '1';
@@ -104,11 +118,12 @@ class ImageGallery {
                 img.addEventListener('click', () => this.openLightbox(img.src));
                 imgWrapper.appendChild(img);
                 imageGrid.appendChild(imgWrapper);
+                console.log(`Image ${i} wrapper added to grid`);
 
-                // Add a small delay between loading each image to prevent overwhelming the browser
+                // Add a small delay between loading each image
                 await new Promise(resolve => setTimeout(resolve, 100));
             }
-            console.log('All images loaded');
+            console.log('All image wrappers added to grid');
         } catch (error) {
             console.error('Error in loadImages:', error);
         }
@@ -171,7 +186,17 @@ class ImageGallery {
 }
 
 // Initialize gallery when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM loaded, creating gallery...');
-    new ImageGallery();
-});
+function initGallery() {
+    console.log('Initializing gallery...');
+    if (window.location.pathname.endsWith('collections.html')) {
+        console.log('On collections page, creating gallery');
+        new ImageGallery();
+    } else {
+        console.log('Not on collections page, skipping gallery creation');
+    }
+}
+
+// Handle both initial load and navigation
+document.addEventListener('DOMContentLoaded', initGallery);
+window.addEventListener('popstate', initGallery);  // Handle browser back/forward
+window.addEventListener('load', initGallery);      // Backup initialization
