@@ -57,28 +57,30 @@ body {
     list-style-type: none;
     margin: 0;
     padding: 1rem;
-    overflow: hidden;
     display: flex;
     justify-content: center;
-    gap: 1rem;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
-    backdrop-filter: blur(20px);
-    border-radius: 16px;
+    gap: 1.5rem;
 }
 
 .navbar li a {
     display: block;
     color: white;
     text-align: center;
-    padding: 14px 16px;
+    padding: 0.8rem 1.5rem;
     text-decoration: none;
-    border-radius: 8px;
+    border-radius: 12px;
     transition: all 0.3s ease;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    font-weight: 400;
 }
 
 .navbar li a:hover {
     background: rgba(255, 255, 255, 0.2);
     transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 }
 
 /* Gallery Container */
