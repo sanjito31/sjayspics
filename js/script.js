@@ -7,15 +7,28 @@ const galleryConfig = {
 
 // Image Gallery Class
 class ImageGallery {
+    static instance = null;  // Singleton instance
+
     constructor() {
+        // Singleton pattern - ensure only one gallery instance exists
+        if (ImageGallery.instance) {
+            return ImageGallery.instance;
+        }
+        
         console.log('Gallery class instantiated');
         this.images = [];
         this.currentFilter = 'all';
         this.mountPoint = document.getElementById('gallery-mount-point');
+        
         if (!this.mountPoint) {
             console.error('Gallery mount point not found!');
             return;
         }
+
+        // Clear any existing content
+        this.mountPoint.innerHTML = '';
+        
+        ImageGallery.instance = this;
         this.initializeGallery();
     }
 
@@ -31,7 +44,7 @@ class ImageGallery {
             console.log('Gallery container mounted');
 
             // Create filter buttons
-            this.createFilterButtons();
+            this.createFilterButtons(galleryContainer);  // Pass container as argument
 
             // Create image grid
             const imageGrid = document.createElement('div');
@@ -50,7 +63,7 @@ class ImageGallery {
         }
     }
 
-    createFilterButtons() {
+    createFilterButtons(galleryContainer) {  // Accept container as parameter
         try {
             console.log('Creating filter buttons...');
             const filterContainer = document.createElement('div');
@@ -64,13 +77,9 @@ class ImageGallery {
                 filterContainer.appendChild(button);
             });
 
-            const galleryContainer = this.mountPoint.querySelector('.gallery-container');
-            if (galleryContainer) {
-                galleryContainer.appendChild(filterContainer);
-                console.log('Filter buttons created successfully');
-            } else {
-                console.error('Gallery container not found for filter buttons');
-            }
+            // Directly append to gallery container
+            galleryContainer.appendChild(filterContainer);
+            console.log('Filter buttons created successfully');
         } catch (error) {
             console.error('Error creating filter buttons:', error);
         }
@@ -186,17 +195,23 @@ class ImageGallery {
 }
 
 // Initialize gallery when DOM is loaded
+let initialized = false;  // Flag to track initialization
+
 function initGallery() {
-    console.log('Initializing gallery...');
+    if (initialized) {
+        console.log('Gallery already initialized, skipping');
+        return;
+    }
+
+    console.log('Checking if we should initialize gallery...');
     if (window.location.pathname.endsWith('collections.html')) {
         console.log('On collections page, creating gallery');
         new ImageGallery();
+        initialized = true;
     } else {
         console.log('Not on collections page, skipping gallery creation');
     }
 }
 
-// Handle both initial load and navigation
+// Single event listener for initialization
 document.addEventListener('DOMContentLoaded', initGallery);
-window.addEventListener('popstate', initGallery);  // Handle browser back/forward
-window.addEventListener('load', initGallery);      // Backup initialization
