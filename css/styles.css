@@ -4,6 +4,11 @@ h1, p, h2 {
     padding: 20px;
 }
 
+.basic {
+    font-family: 'Roboto Mono';
+    color: #EFEFEF;
+}
+
 main {
     align-items: center;
 }
