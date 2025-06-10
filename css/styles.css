@@ -1,6 +1,7 @@
 h1, p, h2 {
     font-family: 'Roboto Mono';
     color: #efefef;
+    padding: 20px;
 }
 
 main {
@@ -9,7 +10,6 @@ main {
 
 body {
     margin: auto;
-    padding: 20px;
     background-color: #0f0f0f;
 }
 
@@ -21,13 +21,14 @@ body {
 
 .navbar {
     text-align: center;
+    padding: 20px;
 }
 
 a:hover {
     color: #03b6fc;
 }
 
-img {
+.media__img {
     width: 75%;
     max-width: 1000px;
     height: auto;
@@ -45,3 +46,24 @@ img {
     height: auto;
     flex-shrink: 0;
 } */
+
+.collection {
+    /* position: relative; */
+    width: 100%;
+}
+
+.filmstrip {
+    width: 100vw;
+    max-width: 100%;
+    min-width: 750px;
+    position: relative;
+}
+
+.film-cell-1 {
+    position: relative;
+    top: 40px;
+    left: 100px;
+    padding: 0;
+    width: 240px;
+    height: 160px;
+}
