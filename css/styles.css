@@ -1,6 +1,10 @@
-h1, p {
+h1, p, h2 {
     font-family: 'Roboto Mono';
     color: #efefef;
+}
+
+main {
+    align-items: center;
 }
 
 body {
@@ -24,7 +28,9 @@ a:hover {
 }
 
 img {
-    width: 50%;
+    width: 75%;
+    max-width: 1000px;
+    height: auto;
     padding: 5px 5px;
 }
 
@@ -34,8 +40,8 @@ img {
     gap: 1rem;
 }
 
-.media__img {
+/* .media__img {
     width: 45%;
     height: auto;
     flex-shrink: 0;
-}
+} */
