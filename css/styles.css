@@ -1,0 +1,41 @@
+h1, p {
+    font-family: 'Roboto Mono';
+    color: #efefef;
+}
+
+body {
+    margin: auto;
+    padding: 20px;
+    background-color: #0f0f0f;
+}
+
+.pages {
+    font-family: 'Roboto Mono';
+    color: #efefef;
+    padding: 20px;
+}
+
+.navbar {
+    text-align: center;
+}
+
+a:hover {
+    color: #03b6fc;
+}
+
+img {
+    width: 50%;
+    padding: 5px 5px;
+}
+
+.media {
+    display: flex;
+    align-items: top;
+    gap: 1rem;
+}
+
+.media__img {
+    width: 45%;
+    height: auto;
+    flex-shrink: 0;
+}
