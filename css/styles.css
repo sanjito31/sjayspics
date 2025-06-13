@@ -1,21 +1,17 @@
-h1, p, h2 {
-    font-family: 'Roboto Mono';
-    color: #efefef;
-    padding: 20px;
-}
-
 .basic {
     font-family: 'Roboto Mono';
     color: #EFEFEF;
 }
 
-main {
-    align-items: center;
-}
-
 body {
     margin: auto;
     background-color: #0f0f0f;
+    font-family: 'Roboto Mono';
+    color: #efefef;
+}
+
+#main-title {
+    padding: 20px;
 }
 
 .pages {
@@ -33,24 +29,54 @@ a:hover {
     color: #03b6fc;
 }
 
-.media__img {
-    width: 75%;
-    max-width: 1000px;
-    height: auto;
-    padding: 5px 5px;
-}
+/* home page gallery */
 
-.media {
+.gallery-item {
     display: flex;
-    align-items: top;
-    gap: 1rem;
+    align-items: flex-start;
+    max-width: 1500px;
+    margin: 0.5rem auto;
 }
 
-/* .media__img {
-    width: 45%;
+.gallery-item img {
+    flex: 0 0 75%;
+    width: 75%;
     height: auto;
-    flex-shrink: 0;
-} */
+    display: block;
+    object-fit: cover;
+}
+
+.gallery-item .text {
+    flex: 1;
+    padding-left: 1rem;
+}
+
+.gallery-item .text h2 {
+    margin: 0 0 0.5rem;
+    font-size: 1.5rem;
+}
+
+.gallery-item .text p {
+    margin: 0;
+    line-height: 1.4;
+}
+
+@media (max-width: 800px) {
+    .gallery-item {
+        flex-direction: column;
+    }
+    .gallery-item img {
+        width: 100%;
+        flex: none;
+    }
+    .gallery-item .text {
+        padding-left: 0;
+        padding-top: 1rem;
+    }
+}
+
+
+/* for collections page, will deal with later */
 
 .collection {
     position: relative;
@@ -74,6 +100,6 @@ a:hover {
     object-fit: cover;
 }
 
-#img1-tags {
+/* #img1-tags {
     white-space: pre-line;
-}
+} */
