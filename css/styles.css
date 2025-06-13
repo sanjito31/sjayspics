@@ -53,22 +53,27 @@ a:hover {
 } */
 
 .collection {
-    /* position: relative; */
+    position: relative;
     width: 100%;
+    height: auto;
 }
 
 .filmstrip {
     width: 100vw;
     max-width: 100%;
     min-width: 750px;
-    position: relative;
+    /* position: relative; */
 }
 
 .film-cell-1 {
-    position: relative;
-    top: 40px;
-    left: 100px;
-    padding: 0;
+    position: absolute;
+    left: 93px;
+    top: 37px;
     width: 240px;
     height: 160px;
+    object-fit: cover;
+}
+
+#img1-tags {
+    white-space: pre-line;
 }
