@@ -17,8 +17,14 @@ def getImagePaths():
             files.append(f)
     
     paths = []
-    for file in sorted(files):
-        paths.append(f"/images/{file}")
+    for file in files:
+
+        title = os.path.splitext(file)[0].replace('_', ' ')
+
+        paths.append({
+            "src":      f"/images/{file}",
+            "title":    title
+        })
 
     return jsonify(paths)
 
