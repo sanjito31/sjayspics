@@ -26,7 +26,7 @@ export async function loadImage(container, imageNum) {
     caption.textContent = `this is image number ${imageNum}`;
 
     // add exif data
-    const exifText = document.createElement('p');
+    const exifText = document.createElement('pre');
     const exif = await getExif(image);
     exifText.textContent = 
         `${exif.dateTime}
