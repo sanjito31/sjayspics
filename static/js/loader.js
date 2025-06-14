@@ -1,6 +1,6 @@
 import { getExif } from "./exif.js";
 
-export async function loadImage(container, imageNum) {
+export async function loadImage(container, imagePath) {
     
     const containerElement = document.getElementById(container);
 
@@ -10,8 +10,9 @@ export async function loadImage(container, imageNum) {
 
     // add image
     const image = document.createElement('img');
-    image.src = `../images/photo${imageNum}.jpg`;
-    image.alt = `image ${imageNum}`;
+    // image.src = `../images/photo${imageNum}.jpg`;
+    image.src = imagePath;
+    image.alt = `image ${imagePath}`;
 
     // add text component (title and caption)
     const text = document.createElement('div');
@@ -19,11 +20,11 @@ export async function loadImage(container, imageNum) {
 
     // add title
     const title = document.createElement('h2');
-    title.textContent = `image ${imageNum}`;
+    title.textContent = `image ${imagePath}`;
 
     // add caption/text
     const caption = document.createElement('p');
-    caption.textContent = `this is image number ${imageNum}`;
+    caption.textContent = `this is image number ${imagePath}`;
 
     // add exif data
     const exifText = document.createElement('pre');
