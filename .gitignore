@@ -1,3 +1,5 @@
 .DS_Store
 *.jpg
 *.png
+.venv/
+__pycache__/
