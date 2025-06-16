@@ -1,7 +1,29 @@
 from flask import Flask, jsonify
 import os
+from dotenv import load_dotenv
+from flask_sqlalchemy import SQLAlchemy
+
+load_dotenv()
 
 app = Flask(__name__, static_folder='static', static_url_path='')
+
+#Define database
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
+
+class Photos(db.Model):
+    __tablename__       = 'photos'
+    id                  = db.Column(db.Integer, primary_key=True)
+    title               = db.Column(db.String, nullable=False)
+    caption             = db.Column(db.String)
+    shutter_speed       = db.Column(db.String)
+    aperture            = db.Column(db.String)
+    taken_at            = db.Column(db.DateTime)
+    url                 = db.Column(db.String, nullable=False)
+    thumb_url           = db.Column(db.String)
+    created_at          = db.Column(db.DateTime, server_default=db.func.now())
+
 
 @app.route("/")
 def index():
