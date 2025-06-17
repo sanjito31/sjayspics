@@ -48,26 +48,13 @@ def index():
 
 @app.route("/api/images")
 def getImageInfo():
-    # img_dir = os.path.join(app.static_folder, 'images')
 
-    # files = []
-    # for f in os.listdir(img_dir):
-    #     if f.lower().endswith('.jpg'):
-    #         files.append(f)
+    # photos = Photos.query.order_by(Photos.taken_at.desc()).all()
+    photos = Photos.query \
+        .filter( Photos.make.isnot(None) ) \
+        .order_by( Photos.taken_at.desc() ) \
+        .all()
     
-    # paths = []
-    # for file in files:
-
-    #     title = os.path.splitext(file)[0].replace('_', ' ')
-
-    #     paths.append({
-    #         "src":      f"/images/{file}",
-    #         "title":    title
-    #     })
-
-    # return jsonify(paths)
-
-    photos = Photos.query.order_by(Photos.taken_at.desc()).all()
     return jsonify([
         {
             'title':        p.title,

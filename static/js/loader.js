@@ -20,43 +20,33 @@ export async function loadImage(container, imagesJSON) {
     // create div
     const unit = document.createElement('div');
     unit.classList.add('gallery-item');
+    // append to gallery main div
+    containerElement.appendChild(unit);
 
     // add image
     const image = document.createElement('img');
     image.src = imagePath;
     image.alt = `${imageTitle}`;
+    unit.appendChild(image);
 
     // add text component (title and caption)
     const text = document.createElement('div');
     text.classList.add('text');
+    unit.appendChild(text);
 
     // add title
     const title = document.createElement('h2');
     title.textContent = imageTitle;
+    text.appendChild(title);
 
     // add caption/text
-    const caption = document.createElement('p');
-    caption.textContent = `info:`;
+    // const caption = document.createElement('p');
+    // caption.textContent = `info:`;
+    // text.appendChild(caption);
 
     // add exif data
     const exifText = document.createElement('pre');
-    // const exif = await getExif(image);
-    exifText.textContent = 
-        `${months[month]} ${year}
-        ${shutterSpeed}
-        ƒ/${aperture}
-        ISO ${iso}
-        ${filmSim}`;
-
-    // append all sub-text elements to text
-    text.appendChild(title);
-    text.appendChild(caption);
+    exifText.textContent = `${months[month]} ${year}\n${shutterSpeed}\nƒ/${aperture}\nISO ${iso}\n${filmSim}`;
     text.appendChild(exifText);
 
-    // append both to div unit (image before text)
-    unit.appendChild(image);
-    unit.appendChild(text);
-
-    // append to gallery main div
-    containerElement.appendChild(unit);
 }
