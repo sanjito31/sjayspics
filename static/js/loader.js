@@ -4,11 +4,16 @@ export async function loadImage(container, imagesJSON) {
 
     const imageTitle = imagesJSON.title;
     const imagePath = imagesJSON.url;
-    const dateTime = imagesJSON.dateTime;
-    const shutterSpeed = imagesJSON.shutterSpeed;
+    const dt = new Date(imagesJSON.taken_at);
+    const year = dt.getFullYear();
+    const month = dt.getMonth();
+    const day = dt.getDay();
+    const shutterSpeed = imagesJSON.shutter_speed;
     const aperture = imagesJSON.aperture;
     const iso = imagesJSON.iso;
     const filmSim = imagesJSON.filmSim;
+
+    const months = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
     
     const containerElement = document.getElementById(container);
 
@@ -37,11 +42,11 @@ export async function loadImage(container, imagesJSON) {
     const exifText = document.createElement('pre');
     // const exif = await getExif(image);
     exifText.textContent = 
-        `${exif.dateTime}
-        ${exif.shutterSpeed}
-        ƒ/${exif.aperture}
-        ISO ${exif.iso}
-        ${exif.filmSim}`;
+        `${months[month]} ${year}
+        ${shutterSpeed}
+        ƒ/${aperture}
+        ISO ${iso}
+        ${filmSim}`;
 
     // append all sub-text elements to text
     text.appendChild(title);

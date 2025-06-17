@@ -18,9 +18,12 @@ class Photos(db.Model):
     public_id           = db.Column(db.String, unique=True, nullable=False)
     title               = db.Column(db.String, nullable=False)
     caption             = db.Column(db.String)
+    make                = db.Column(db.String)
+    model               = db.Column(db.String)
     shutter_speed       = db.Column(db.String)
     aperture            = db.Column(db.String)
     iso                 = db.Column(db.String)
+    exposure_program    = db.Column(db.String)
     film_sim            = db.Column(db.String)
     grain_effect        = db.Column(db.String)
     color_chrome_effect = db.Column(db.String)
@@ -44,7 +47,7 @@ def index():
     return app.send_static_file('index.html')
 
 @app.route("/api/images")
-def getImagePaths():
+def getImageInfo():
     # img_dir = os.path.join(app.static_folder, 'images')
 
     # files = []
@@ -69,11 +72,13 @@ def getImagePaths():
         {
             'title':        p.title,
             'caption':      p.caption,
-            'shutterSpeed': p.shutter_speed,
+            'shutter_speed': p.shutter_speed,
             'aperture':     p.aperture,
-            'takenAt':      p.taken_at.isoformat() if p.taken_at else None,
+            'iso':          p.iso,
+            'taken_at':      p.taken_at.isoformat() if p.taken_at else None,
             'url':          p.url,
-            'thumbUrl':     p.thumb_url
+            'make':         p.make,
+            'model':        p.model
         }
         for p in photos
     ])
