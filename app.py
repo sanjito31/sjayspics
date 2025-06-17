@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 import os
 from dotenv import load_dotenv
 from flask_sqlalchemy import SQLAlchemy
@@ -15,10 +15,24 @@ db = SQLAlchemy(app)
 class Photos(db.Model):
     __tablename__       = 'photos'
     id                  = db.Column(db.Integer, primary_key=True)
+    public_id           = db.Column(db.String, unique=True, nullable=False)
     title               = db.Column(db.String, nullable=False)
     caption             = db.Column(db.String)
     shutter_speed       = db.Column(db.String)
     aperture            = db.Column(db.String)
+    iso                 = db.Column(db.String)
+    film_sim            = db.Column(db.String)
+    grain_effect        = db.Column(db.String)
+    color_chrome_effect = db.Column(db.String)
+    color_chrome_blue   = db.Column(db.String)
+    white_bal           = db.Column(db.String)
+    dynamic_range       = db.Column(db.String)
+    tone_curve          = db.Column(db.String)
+    color               = db.Column(db.String)
+    sharpness           = db.Column(db.String)
+    high_iso_nr         = db.Column(db.String)
+    clarity             = db.Column(db.String)
+    exp_comp            = db.Column(db.String)
     taken_at            = db.Column(db.DateTime)
     url                 = db.Column(db.String, nullable=False)
     thumb_url           = db.Column(db.String)
@@ -31,24 +45,38 @@ def index():
 
 @app.route("/api/images")
 def getImagePaths():
-    img_dir = os.path.join(app.static_folder, 'images')
+    # img_dir = os.path.join(app.static_folder, 'images')
 
-    files = []
-    for f in os.listdir(img_dir):
-        if f.lower().endswith('.jpg'):
-            files.append(f)
+    # files = []
+    # for f in os.listdir(img_dir):
+    #     if f.lower().endswith('.jpg'):
+    #         files.append(f)
     
-    paths = []
-    for file in files:
+    # paths = []
+    # for file in files:
 
-        title = os.path.splitext(file)[0].replace('_', ' ')
+    #     title = os.path.splitext(file)[0].replace('_', ' ')
 
-        paths.append({
-            "src":      f"/images/{file}",
-            "title":    title
-        })
+    #     paths.append({
+    #         "src":      f"/images/{file}",
+    #         "title":    title
+    #     })
 
-    return jsonify(paths)
+    # return jsonify(paths)
+
+    photos = Photos.query.order_by(Photos.taken_at.desc()).all()
+    return jsonify([
+        {
+            'title':        p.title,
+            'caption':      p.caption,
+            'shutterSpeed': p.shutter_speed,
+            'aperture':     p.aperture,
+            'takenAt':      p.taken_at.isoformat() if p.taken_at else None,
+            'url':          p.url,
+            'thumbUrl':     p.thumb_url
+        }
+        for p in photos
+    ])
 
 
 if __name__ == '__main__':

@@ -17,9 +17,14 @@ async function init() {
 
         const paths = await res.json();
 
-        for (const { src, title } of paths) {
-            console.log(src);
-            await loadImage('gallery', src, title);
+        // for (const { src, title } of paths) {
+        //     console.log(src);
+        //     await loadImage('gallery', src, title);
+        // }
+
+        for (const p of paths) {
+            console.log(p);
+            await loadImage('gallery', p);
         }
 
     // for(let i = 1; i <= numImages; i++) {

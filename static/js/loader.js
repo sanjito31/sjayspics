@@ -1,6 +1,14 @@
-import { getExif } from "./exif.js";
+// import { getExif } from "./exif.js";
 
-export async function loadImage(container, imagePath, imageTitle) {
+export async function loadImage(container, imagesJSON) {
+
+    const imageTitle = imagesJSON.title;
+    const imagePath = imagesJSON.url;
+    const dateTime = imagesJSON.dateTime;
+    const shutterSpeed = imagesJSON.shutterSpeed;
+    const aperture = imagesJSON.aperture;
+    const iso = imagesJSON.iso;
+    const filmSim = imagesJSON.filmSim;
     
     const containerElement = document.getElementById(container);
 
@@ -27,7 +35,7 @@ export async function loadImage(container, imagePath, imageTitle) {
 
     // add exif data
     const exifText = document.createElement('pre');
-    const exif = await getExif(image);
+    // const exif = await getExif(image);
     exifText.textContent = 
         `${exif.dateTime}
         ${exif.shutterSpeed}
