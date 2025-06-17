@@ -3,73 +3,87 @@ import requests
 from datetime import datetime
 from PIL import Image, ExifTags
 from io import BytesIO
-from cloudinary import config, api
+# from cloudinary import config, api
+import cloudinary
+import cloudinary.api
 from app import app, db, Photos
 from dotenv import load_dotenv
 
 load_dotenv()
 
 ## Cloudinary vars
-config(
+cloudinary.config (
     cloud_name = os.environ['CLOUDINARY_CLOUD_NAME'],
     api_key = os.environ['CLOUDINARY_API_KEY'],
     api_secret = os.environ['CLOUDINARY_API_SECRET']
 )
 
-
 ## Get EXIF data from each image
 def extract_exif(img_bytes):
 
     img = Image.open(BytesIO(img_bytes))
-    exif = {
-        ExifTags.TAGS.get(k): v
-        for k, v in img._getexif().items()
-        if k in ExifTags.TAGS
-    }
+    
+    raw_exif = img._getexif()
+    if not raw_exif: return {}
+
+    exif = {}
+    for k, v in raw_exif.items():
+        tag_name = ExifTags.TAGS.get(k, k)
+        exif[tag_name] = v
+
+    raw_ss          = exif.get("ExposureTime")
+    raw_ap          = exif.get("FNumber")
+    raw_iso         = exif.get("ISOSpeedRatings")
+    raw_datetime    = exif.get("DateTimeOriginal")
+    raw_make        = exif.get("Make")
+    raw_model       = exif.get("Model")
+    raw_exp_prog    = exif.get("ExposureProgram")
 
     return {
-        'shutter_speed':    exif.get('ShutterSpeedValue'),
-        'aperture':         exif.get('FNumber'),
-        'iso':              exif.get('ISOSpeedRating'),
-        'taken_at':         datetime.strptime(
-                                exif.get('DateTimeOriginal'),
-                                '%Y:%m:%d %H:%M:%S'
-                            ) if exif.get('DateTimeOriginal') else None
+        'ShutterSpeed':         ("1/" + str(int(1/float(raw_ss)))) if raw_ss is not None else None,          
+        'FNumber':              float(raw_ap) if raw_ap is not None else None,
+        'ISOSpeedRatings':      int(raw_iso) if raw_iso is not None else None,
+        'DateTimeOriginal':     datetime.strptime(raw_datetime, '%Y:%m:%d %H:%M:%S') if raw_datetime is not None else None,
+        'Make':                 str(raw_make) if raw_make is not None else None,
+        'Model':                str(raw_model) if raw_make is not None else None,
+        'ExposureProgram':      str(raw_exp_prog) if raw_make is not None else None
     }
-
-
 
 ## Ingest images from Cloudinary
 def ingest():
-    resources = api.resources(
-        type='upload',
-        resource_type='image',
-        # prefix='/sjayspics/',
-        max_results=100
-    )['resources']
+
+    resources = cloudinary\
+        .api.resources_by_asset_folder("sjayspics", 
+            max_results=100,
+            metadata = True)["resources"]
 
     for r in resources:
-        print("resources ok")
-        public_id   = r['public_id']
-        url         = r['secure_url']
-        thumb_url   = r['eager'][0]['secure_url'] if r.get('eager') else None
+        public_id   = r["public_id"]
+        url         = r["secure_url"]
 
         resp = requests.get(url)
-        ex = extract_exif(resp.content)
+        exif = extract_exif(resp.content)
 
         photo = Photos.query.filter_by(public_id=public_id).first()
         if not photo:
             photo = Photos(public_id=public_id)
             db.session.add(photo)
 
-        photo.title         = public_id.split('/')[-1].replace('_', ' ')
-        photo.caption       = None
-        photo.shutter_speed = str(ex['shutter_speed'])
-        photo.aperture      = str(ex['aperture'])
-        photo.iso           = str(ex['iso'])
-        photo.taken_at      = ex['taken_at']
-        photo.url           = url
-        photo.thumb_url     = thumb_url
+        raw = public_id
+        words = raw.split("_")[:-1]
+        title = " ".join(words)
+
+        photo.title             = title
+        photo.caption           = None
+        photo.url               = url
+
+        photo.shutter_speed     = exif.get("ShutterSpeed")
+        photo.aperture          = exif.get("FNumber")
+        photo.iso               = exif.get("ISOSpeedRatings")
+        photo.taken_at          = exif.get("DateTimeOriginal")
+        photo.make              = exif.get("Make")
+        photo.model             = exif.get("Model")
+        photo.exposure_program  = exif.get("ExposureProgram")
 
     db.session.commit()
 
