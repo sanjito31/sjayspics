@@ -1,10 +1,7 @@
 import os
 import cloudinary
-import cloudinary.api
 import cloudinary.uploader
 from dotenv import load_dotenv
-import exifread
-import json
 from PIL import Image
 from io import BytesIO
 
@@ -19,7 +16,7 @@ cloudinary.config (
     api_secret = os.environ['CLOUDINARY_API_SECRET']
 )
 
-
+# resize image function
 def resize(input_path, quality):
 
     img = Image.open(input_path)
@@ -39,7 +36,7 @@ def resize(input_path, quality):
     out.seek(0)
     return out
 
-
+# 
 def upload_cloudinary(input_path):
 
     count = 0
@@ -51,6 +48,7 @@ def upload_cloudinary(input_path):
 
             # path of image to resize
             to_resize = os.path.join(input_path, f)  
+            image_title, ext = os.path.splitext(f)
 
             ## Check if previously uploaded (hash)
                
@@ -59,14 +57,11 @@ def upload_cloudinary(input_path):
             resized = resize(to_resize, 80)
             print(f"Image {count} resized")
 
-
             ## Upload
             cloudinary.uploader.upload(
                 resized,
-                resource_type="image",
-                media_metadata=True,
-                flags="keep_iptc",
-                use_filename=True
+                public_id=image_title,
+                resource_type="image"
             )
             print(f"Image {count} uploaded")
 
