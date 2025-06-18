@@ -10,14 +10,24 @@ body {
     color: #efefef;
 }
 
-#main-title {
+/* .page-title {
     padding: 20px;
     display: flex;
     align-items: flex-start;
     max-width: 1500px;
-    margin: 0.5rem auto;
-    
+    margin: 0.5rem auto; 
+} */
+
+.page-content {
+    padding: 20px;
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    max-width: 1500px;
+    margin: 0.5rem auto; 
+    overflow: visible;
 }
+
 
 .pages {
     font-family: 'Roboto Mono';
@@ -98,6 +108,13 @@ a:hover {
     width: 100%;
     height: auto;
 }
+
+/* .collection img {
+    margin: -0.5rem;
+    padding: -20px;
+    width: calc(100% + 40px);
+    height: auto;
+} */
 
 .filmstrip {
     width: 100vw;
