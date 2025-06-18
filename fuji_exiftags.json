@@ -79,12 +79,12 @@
     "0x1004": {
         "name": "Contrast",
         "values": {
-        "0x0": "Normal",
-        "0x80": "Medium High",
-        "0x100": "High",
-        "0x180": "Medium Low",
-        "0x200": "Low",
-        "0x8000": "Film Simulation"
+            "0x0": "Normal",
+            "0x80": "Medium High",
+            "0x100": "High",
+            "0x180": "Medium Low",
+            "0x200": "Low",
+            "0x8000": "Film Simulation"
         }
     },
     "0x1005": {
@@ -99,11 +99,11 @@
             "0x300": "Low"
         }
     },
-    "0x100a": {
+    "0x100A": {
         "name": "WhiteBalanceFineTune",
         "values": {}
     },
-    "0x100b": {
+    "0x100B": {
         "name": "NoiseReduction",
         "values": {
             "0x40": "Low",
@@ -111,8 +111,8 @@
             "0x100": "n/a"
         }
     },
-    "0x100e": {
-        "name": "NoiseReduction",
+    "0x100E": {
+        "name": "NoiseReductionValue",
         "values": {
             "0x0": "0 (normal)",
             "0x100": "+2 (strong)",
@@ -125,7 +125,7 @@
             "0x2e0": "-4 (weakest)"
         }
     },
-    "0x100f": {
+    "0x100F": {
         "name": "Clarity",
         "values": {
             "-5000": "-5",
@@ -203,11 +203,11 @@
         "name": "FocusPixel",
         "values": {}
     },
-    "0x102b": {
+    "0x102B": {
         "name": "PrioritySettings",
         "values": {}
     },
-    "0x102d": {
+    "0x102D": {
         "name": "FocusSettings",
         "values": {}
     },
@@ -259,7 +259,7 @@
             "64": "Strong"
         }
     },
-    "0x104c": {
+    "0x104C": {
         "name": "GrainEffectSize",
         "values": {
             "0": "Off",
@@ -267,7 +267,7 @@
             "32": "Large"
         }
     },
-    "0x104e": {
+    "0x104E": {
         "name": "ColorChromeFXBlue",
         "values": {
             "0": "Off",
