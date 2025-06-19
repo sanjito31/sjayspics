@@ -1,3 +1,10 @@
+####################################################
+
+# This script is only meant to be run locally!!
+# Uploads images from disk to cloudinary and resizes
+
+####################################################
+
 import os
 import cloudinary
 import cloudinary.uploader
