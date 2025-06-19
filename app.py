@@ -64,15 +64,26 @@ def getImageInfo():
     
     return jsonify([
         {
-            'title':        p.title,
-            'caption':      p.caption,
-            'shutter_speed': p.shutter_speed,
-            'aperture':     p.aperture,
-            'iso':          p.iso,
-            'taken_at':      p.taken_at.isoformat() if p.taken_at else None,
-            'url':          p.url,
-            'make':         p.make,
-            'model':        p.model
+            'title':            p.title,
+            'caption':          p.caption,
+            'shutter_speed':    p.shutter_speed,
+            'aperture':         p.aperture,
+            'iso':              p.iso,
+            'taken_at':         p.taken_at.isoformat() if p.taken_at else None,
+            'url':              p.url,
+            'make':             p.make,
+            'model':            p.model,
+            'film_sim':         p.film_sim,
+            'grain_effect':     p.grain_effect,
+            'color_chrome_effect':  p.color_chrome_effect,
+            'color_chrome_blue':p.color_chrome_blue,
+            'white_bal':        p.white_bal,
+            'dynamic_range':    p.dynamic_range,
+            'highlight_tone':   p.highlight_tone,
+            'shadow_tone':      p.shadow_tone,
+            'sharpness':        p.sharpness,
+            'high_iso_nr':      p.high_iso_nr,
+            'clarity':          p.clarity
         }
         for p in photos
     ])

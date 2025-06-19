@@ -1,5 +1,21 @@
 // import { getExif } from "./exif.js";
 
+function aperture_convert(str) {
+  let raw;
+
+  if (str.includes('/')) {
+    // “71/10” → [“71”, “10”] → [71, 10]
+    const [num, den] = str.split('/').map(s => parseInt(s, 10));
+    raw = num / den;
+  } else {
+    // already a single number (might have decimals)
+    raw = parseFloat(str);
+  }
+
+  // round to 1 decimal place and return a Number
+  return Math.round(raw * 10) / 10;
+}
+
 export async function loadImage(container, imagesJSON) {
 
     const imageTitle = imagesJSON.title;
@@ -9,9 +25,9 @@ export async function loadImage(container, imagesJSON) {
     const month = dt.getMonth();
     const day = dt.getDay();
     const shutterSpeed = imagesJSON.shutter_speed;
-    const aperture = imagesJSON.aperture;
+    const aperture = aperture_convert(imagesJSON.aperture);
     const iso = imagesJSON.iso;
-    const filmSim = imagesJSON.filmSim;
+    const filmSim = imagesJSON.film_sim;
 
     const months = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
     
