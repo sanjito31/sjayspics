@@ -1,13 +1,13 @@
 import os
 import requests
 from datetime import datetime
-from PIL import Image, ExifTags
 from io import BytesIO
-# from cloudinary import config, api
 import cloudinary
 import cloudinary.api
 from app import app, db, Photos
 from dotenv import load_dotenv
+import exifread
+import json
 
 load_dotenv()
 
@@ -18,36 +18,72 @@ cloudinary.config (
     api_secret = os.environ['CLOUDINARY_API_SECRET']
 )
 
+def humanize_fuji_maker(raw_tags):
+
+    with open("fuji_exiftags.json","r") as f:
+        FUJI_TAGS = json.load(f)
+
+    out = {}
+
+    for k, v in raw_tags.items():
+        tag_hex = str(k.split()[-1])
+
+        info = FUJI_TAGS.get(tag_hex)
+        
+        if info:
+            values = info["values"]
+            first_key = next(iter(values), None)
+
+            if first_key and first_key.startswith("0x"):
+                val = str(hex(v.values[0]))
+            else:
+                val = str(int(v.values[0]))
+
+            human_val = values.get(val, f"Unknown: {val}")
+            out[ info["name"] ] = human_val
+
+    return out
+
 ## Get EXIF data from each image
 def extract_exif(img_bytes):
 
-    img = Image.open(BytesIO(img_bytes))
-    
-    raw_exif = img._getexif()
-    if not raw_exif: return {}
+    img = BytesIO(img_bytes)
+
+    tags = exifread.process_file(img, details=True, extract_thumbnail=False)
+
+    ## load fuji human readable exif tags
+    fuji_raw = { tag: tags[tag] for tag in tags if tag.startswith("MakerNote Tag 0x") }
+    fuji_human = humanize_fuji_maker(fuji_raw)
 
     exif = {}
-    for k, v in raw_exif.items():
-        tag_name = ExifTags.TAGS.get(k, k)
-        exif[tag_name] = v
 
-    raw_ss          = exif.get("ExposureTime")
-    raw_ap          = exif.get("FNumber")
-    raw_iso         = exif.get("ISOSpeedRatings")
-    raw_datetime    = exif.get("DateTimeOriginal")
-    raw_make        = exif.get("Make")
-    raw_model       = exif.get("Model")
-    raw_exp_prog    = exif.get("ExposureProgram")
+    ## Basic EXIF data
+    exif["Make"]            = str(tags.get("Image Make"))
+    exif["Model"]           = str(tags.get("Image Model"))
+    dateTime                = str(tags.get("EXIF DateTimeOriginal"))
+    exif["DateTime"]        = datetime.strptime(dateTime, '%Y:%m:%d %H:%M:%S') if dateTime is not None else None
+    exif["ShutterSpeed"]    = str(tags.get("EXIF ExposureTime"))
+    # raw_ap                  = tags.get("EXIF FNumber")
+    # raw_ap_num, raw_ap_den  = str(raw_ap).split("/") if raw_ap is not None else None
+    # exif["FNumber"]         = float(raw_ap_num)/float(raw_ap_den)
+    exif["FNumber"]         = str(tags.get("EXIF FNumber"))
+    exif["ISOSpeedRatings"] = str(tags.get("EXIF ISOSpeedRatings"))
+    exif["FocalLength"]     = str(tags.get("EXIF FocalLength"))
+    exif["ImageWidth"]      = str(tags.get("EXIF ExifImageWidth"))
+    exif["ImageHeight"]     = str(tags.get("EXIF ExifImageLength"))
 
-    return {
-        'ShutterSpeed':         ("1/" + str(int(1/float(raw_ss)))) if raw_ss is not None else None,          
-        'FNumber':              float(raw_ap) if raw_ap is not None else None,
-        'ISOSpeedRatings':      int(raw_iso) if raw_iso is not None else None,
-        'DateTimeOriginal':     datetime.strptime(raw_datetime, '%Y:%m:%d %H:%M:%S') if raw_datetime is not None else None,
-        'Make':                 str(raw_make) if raw_make is not None else None,
-        'Model':                str(raw_model) if raw_make is not None else None,
-        'ExposureProgram':      str(raw_exp_prog) if raw_make is not None else None
-    }
+    ## Fujifilm Specific 'MakerNote' EXIF Data
+    exif["Sharpness"]       = str(tags.get("MakerNote Sharpness"))
+    exif["WhiteBalance"]    = str(tags.get("MakerNote WhiteBalance"))
+    exif["Saturation"]      = str(tags.get("MakerNote Saturation"))
+    exif["Contrast"]        = str(tags.get("MakerNote Contrast"))
+    exif["WBFineTune"]      = str(tags.get("MakerNote WhiteBalanceFineTune"))
+    
+    for k, v in fuji_human.items():
+        exif[f"{k}"] = str(v)
+
+    return exif
+
 
 ## Ingest images from Cloudinary
 def ingest():
@@ -62,6 +98,7 @@ def ingest():
         url         = r["secure_url"]
 
         resp = requests.get(url)
+        resp.raise_for_status()
         exif = extract_exif(resp.content)
 
         photo = Photos.query.filter_by(public_id=public_id).first()
@@ -69,21 +106,32 @@ def ingest():
             photo = Photos(public_id=public_id)
             db.session.add(photo)
 
-        raw = public_id
-        words = raw.split("_")[:-1]
-        title = " ".join(words)
+        title = public_id.replace("_", " ")
+        # title = " ".join(words)
 
-        photo.title             = title
-        photo.caption           = None
-        photo.url               = url
+        photo.title                 = title
+        photo.caption               = None
+        photo.url                   = url
 
-        photo.shutter_speed     = exif.get("ShutterSpeed")
-        photo.aperture          = exif.get("FNumber")
-        photo.iso               = exif.get("ISOSpeedRatings")
-        photo.taken_at          = exif.get("DateTimeOriginal")
-        photo.make              = exif.get("Make")
-        photo.model             = exif.get("Model")
-        photo.exposure_program  = exif.get("ExposureProgram")
+        photo.shutter_speed         = exif.get("ShutterSpeed")
+        photo.aperture              = exif.get("FNumber")
+        photo.iso                   = exif.get("ISOSpeedRatings")
+        photo.taken_at              = exif.get("DateTime")
+        photo.make                  = exif.get("Make")
+        photo.model                 = exif.get("Model")
+        photo.film_sim              = exif.get("FilmMode")
+        photo.grain_effect          = (str(exif.get("GrainEffectRoughness")) + " " + str(exif.get("GrainEffectSize")))
+        photo.color_chrome_effect   = exif.get("ColorChromeEffect")
+        photo.color_chrome_blue     = exif.get("ColorChromeFXBlue")
+        photo.white_bal             = exif.get("WBFineTune")
+        photo.dynamic_range         = exif.get("DynamicRange")
+        photo.highlight_tone        = exif.get("HighlightTone")
+        photo.shadow_tone           = exif.get("ShadowTone")
+        # photo.color                 = db.Column(db.String)
+        photo.sharpness             = exif.get("Sharpness")
+        photo.high_iso_nr           = exif.get("NoiseReductionValue")
+        photo.clarity               = exif.get("Clarity")
+        
 
     db.session.commit()
 
