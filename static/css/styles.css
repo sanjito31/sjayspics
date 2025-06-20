@@ -1,12 +1,12 @@
 .basic {
-    font-family: 'Roboto Mono';
+    font-family: 'Space Mono';
     color: #EFEFEF;
 }
 
 body {
     margin: auto;
-    background-color: #0f0f0f;
-    font-family: 'Roboto Mono';
+    background-color: #050505;
+    font-family: 'Space Mono';
     color: #efefef;
 }
 
@@ -23,14 +23,14 @@ body {
     display: flex;
     align-items: flex-start;
     flex-direction: column;
-    max-width: 1500px;
+    max-width: 1200px;
     margin: 0.5rem auto; 
     overflow: visible;
 }
 
 
 .pages {
-    font-family: 'Roboto Mono';
+    font-family: 'Space Mono';
     color: #efefef;
     padding: 20px;
 }
@@ -76,6 +76,7 @@ a:hover {
 .gallery-item .text pre{
     font-size: 1rem;
     padding: 20px 0;
+    font-family: "Space Mono";
 }
 
 .gallery-item .text h2,
