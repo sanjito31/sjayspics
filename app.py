@@ -56,10 +56,9 @@ def index():
 @app.route("/api/images")
 def getImageInfo():
 
-    # photos = Photos.query.order_by(Photos.taken_at.desc()).all()
     photos = Photos.query \
         .filter( Photos.make.isnot(None) ) \
-        .order_by( Photos.taken_at.desc() ) \
+        .order_by( Photos.created_at.desc() ) \
         .all()
     
     return jsonify([
