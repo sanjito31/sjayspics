@@ -1,12 +1,20 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, send_from_directory
 import os
 from dotenv import load_dotenv
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+import pathlib
 
 load_dotenv()
 
-app = Flask(__name__, static_folder='static', static_url_path='')
+BASE_DIR = os.path.dirname(__file__)
+BUILD_DIR = os.path.join(BASE_DIR, "client", "build")
+
+app = Flask(
+    __name__, 
+    static_folder=BUILD_DIR, 
+    static_url_path=""
+)
 CORS(app)
 
 db_url = os.getenv("DATABASE_URL")
@@ -53,7 +61,8 @@ class Photos(db.Model):
 
 @app.route("/")
 def index():
-    return app.send_static_file('index.html')
+    # return app.send_static_file('index.html')
+    return send_from_directory(BUILD_DIR, "index.html")
 
 @app.route("/api/images.json")
 def getImageInfo():

@@ -1,3 +1,5 @@
+/* @import "tailwindcss"; */
+
 .basic {
     font-family: 'Space Mono';
     color: #EFEFEF;
@@ -49,7 +51,7 @@ a:hover {
 .gallery-item {
     display: flex;
     align-items: flex-start;
-    max-width: 1500px;
+    max-width: 1200px;
     margin: 0.5rem auto;
 }
 
@@ -100,39 +102,3 @@ a:hover {
         padding-top: 1rem;
     }
 }
-
-
-/* for collections page, will deal with later */
-
-.collection {
-    position: relative;
-    width: 100%;
-    height: auto;
-}
-
-/* .collection img {
-    margin: -0.5rem;
-    padding: -20px;
-    width: calc(100% + 40px);
-    height: auto;
-} */
-
-.filmstrip {
-    width: 100vw;
-    max-width: 100%;
-    min-width: 750px;
-    /* position: relative; */
-}
-
-.film-cell-1 {
-    position: absolute;
-    left: 93px;
-    top: 37px;
-    width: 240px;
-    height: 160px;
-    object-fit: cover;
-}
-
-/* #img1-tags {
-    white-space: pre-line;
-} */
