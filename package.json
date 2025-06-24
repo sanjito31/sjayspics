@@ -5,5 +5,8 @@
     },
     "scripts": {
         "heroku-postbuild": "cd client && npm ci && npm run build"
+    },
+    "dependencies": {
+        "vite": "^6.3.5"
     }
 }
