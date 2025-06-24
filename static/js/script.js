@@ -4,11 +4,9 @@ window.addEventListener('DOMContentLoaded', init);
 
 async function init() {
 
-    // const numImages = 12;
-
     try {
         console.log("attemping to fetch images");
-        const res = await fetch('/api/images');
+        const res = await fetch('/api/images.json');
         console.log('fetch status:', res.status, res.statusText);
 
         if(!res.ok) {
@@ -17,20 +15,10 @@ async function init() {
 
         const paths = await res.json();
 
-        // for (const { src, title } of paths) {
-        //     console.log(src);
-        //     await loadImage('gallery', src, title);
-        // }
-
         for (const p of paths) {
             console.log(p);
             await loadImage('gallery', p);
         }
-
-    // for(let i = 1; i <= numImages; i++) {
-    //     await loadImage('gallery', i);
-
-    // }
 
     } catch(err) {
         console.error('Failed to load image list:', err);
