@@ -7,7 +7,14 @@ export default defineConfig({
     react()
   ],
   build: {
-    outDir: 'build',    // <-- now it will write into client/build
+    outDir: 'build',
     emptyOutDir: true
   }
+  //    ONLY UNCOMMENT BELOW WHEN LOCALLY DEVELOPING
+  // ,
+  // server: {
+  //   proxy: {
+  //     "/api/images.json": "http://localhost:5001"
+  //   }
+  // }
 })

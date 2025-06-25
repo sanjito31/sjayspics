@@ -15,7 +15,7 @@ function aperture_convert(str) {
   return Math.round(raw * 10) / 10;
 }
 
-function GalleryCard( {title, url, shutter, aperture, iso, filmSim, date } ) {
+function GalleryCard( {title, url, shutter, aperture, iso, filmSim, date, setFilmFilter} ) {
 
     const dt = new Date(date);
     const year = dt.getFullYear();
@@ -32,7 +32,7 @@ function GalleryCard( {title, url, shutter, aperture, iso, filmSim, date } ) {
                     {shutter}<br />
                     ƒ/{FNumber}<br />
                     ISO {iso}<br />
-                    {filmSim}
+                    <a onClick={() => setFilmFilter(filmSim)}>{filmSim}</a>
                 </pre>
             </div>
         </div>

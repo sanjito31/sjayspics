@@ -44,6 +44,7 @@ body {
 
 a:hover {
     color: #03b6fc;
+    cursor: pointer;
 }
 
 /* home page gallery */
@@ -67,6 +68,17 @@ a:hover {
     flex: 0 0 25%;
     min-width: 0;
     padding-left: 1rem;
+}
+
+.filter-message {
+    line-height: 2;
+    font-size: 1em;
+    text-align: center;
+}
+
+.filter-message p {
+    padding: 0;
+    margin: 0;
 }
 
 /* .gallery-item .text h2 {
