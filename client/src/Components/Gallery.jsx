@@ -7,6 +7,7 @@ function Gallery({ photos }) {
 
     const [filmFilter, setFilmFilter] = useState("");
     const [photosShown, setPhotosShown] = useState(() => photos ?? []);
+    const [version, setVersion] = useState(0);
 
     useEffect(() => {
         if(Array.isArray(photos)) {
@@ -16,6 +17,7 @@ function Gallery({ photos }) {
 
     function updatePhotosShown(newFilmFilter) {
         setFilmFilter(newFilmFilter);
+        setVersion(v => v + 1);
         setPhotosShown(p => (
             p.filter(photo => photo.film_sim === newFilmFilter)
         ))
@@ -23,6 +25,7 @@ function Gallery({ photos }) {
 
     function resetFilmFilter() {
         setFilmFilter("")
+        setVersion(v => v + 1);
         setPhotosShown(photos)
     }
 
@@ -36,7 +39,7 @@ function Gallery({ photos }) {
             }
             {photosShown.map((photo, id) => (
                 <GalleryCard
-                    key={id}
+                    key={`${id}-v${version}`}
                     title={photo["title"]}
                     url={photo["url"]}
                     shutter={photo["shutter_speed"]}
