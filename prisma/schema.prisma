@@ -1,0 +1,134 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+model Photo {
+  id            String  @id @default(cuid())
+  filename      String 
+  width         Int
+  height        Int
+  fileSize      Float
+  mimeType      String
+  
+  // Cloudinary specific
+  publicID      String   @unique
+  assetID       String   @unique
+  url           String
+  secureURL     String
+  
+  // Date and time
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Basic metadata
+  title         String
+  caption       String?
+  tags          String[]
+  isPublic      Boolean  @default(true)
+  filmPhoto     Boolean  @default(false)
+
+  // Location
+  latitude      Float?
+  longitude     Float?
+  location      String?
+
+  // Relations
+  exifData      ExifData?
+  fujiData      FujifilmData?
+  // collections   Collection[] @relation("PhotoCollections")
+  // PhotoCollections PhotoCollections[] @relation("PhotoCollections")
+  
+  @@index([createdAt])
+  @@index([isPublic])  
+  
+}
+
+model ExifData {
+  photoID       String   @id 
+  photo         Photo    @relation(fields: [photoID], references: [id], onDelete: Cascade)
+
+  // Camera info
+  make          String?
+  model         String?
+  lens          String?
+
+  // Exposure settings
+  shutterSpeed  String?
+  aperture      Float?
+  iso           Int?
+  focalLength   Float?
+  exposureComp  Float?
+
+  // Other
+  dateTaken     DateTime?
+  orientation   Int?
+  flash         String?
+  whiteBalance  String?
+  meteringMode  String?
+  exposureMode  String?
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model FujifilmData {
+
+  photoID       String    @id
+  photo         Photo     @relation(fields: [photoID], references: [id], onDelete: Cascade)
+
+                                        // https://exiftool.org/TagNames/FujiFilm.html
+  filmMode                String?       // 0x1401
+  grainEffectRoughness    String?       // 0x1047
+  grainEffectSize         String?       // 0x104C
+  colorChromeEffect       String?       // 0x1048
+  colorChromeFXBlue       String?       // 0x104E
+  whiteBalance            String?       // 0x1002
+  whiteBalanceFineTune    String?       // 0x100A
+  dynamicRangeSetting     String?       // 0x1402
+  highlightTone           String?       // 0x1041
+  shadowTone              String?       // 0x1040
+  color                   String?       // 0x1003
+  sharpness               String?       // 0x1001
+  noiseReduction          String?       // 0x100E
+  clarity                 String?       // 0x100F
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+// model Collection {
+//   id            String  @id @default(cuid())
+//   name          String
+//   slug          String   @unique
+//   description   String?
+//   coverPhotoID  String?
+
+//   photos        Photo[]  @relation("PhotoCollections")
+  
+//   createdAt     DateTime @default(now())
+//   updatedAt     DateTime @updatedAt
+
+//   PhotoCollections PhotoCollections[]
+// }
+
+// model PhotoCollections {
+//   photo        Photo      @relation("PhotoCollections", fields: [photoId], references: [id])
+//   photoId      String
+//   collection   Collection @relation(fields: [collectionId], references: [id])
+//   collectionId String
+  
+//   @@id([photoId, collectionId])  
+// }
