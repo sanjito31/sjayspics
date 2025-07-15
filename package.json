@@ -1,0 +1,9 @@
+{
+    "name": "sjayspics",
+    "engines": {
+        "node": "18.x"
+    },
+    "scripts": {
+        "heroku-postbuild": "cd client && npm ci && npm run build"
+    }
+}
