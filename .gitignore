@@ -1,12 +1,24 @@
+## Python specific for Flask version of site that I'd rather not touch
+.venv/
+__pycache__/
+
+## auto generated junk
+client/node_modules
+client/build
+.idea
+
+## Unwanted file types
 .DS_Store
 *.jpg
 *.jpeg
 *.png
-.venv/
-__pycache__/
+
+## Sensitive 
 .env
+
+## Random test scripts or reference files that don't need to be tracked
+# but are useful nonetheless 
+ignored/
 testapi.py
 pics.json
 chatgpt.py
-client/node_modules
-client/build
