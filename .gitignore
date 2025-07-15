@@ -8,3 +8,6 @@ __pycache__/
 testapi.py
 pics.json
 chatgpt.py
+.idea
+client/node_modules
+client/build
