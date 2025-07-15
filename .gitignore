@@ -10,3 +10,4 @@ pics.json
 chatgpt.py
 client/node_modules
 client/build
+.idea
