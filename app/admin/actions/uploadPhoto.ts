@@ -2,6 +2,8 @@ import { v2 as cloudinary, UploadApiResponse } from "cloudinary"
 import sharp from "sharp"
 import prisma from "@/lib/prisma"
 import { ExifTool } from "exiftool-vendored"
+import { file as tmpFile } from "tmp-promise"
+import { writeFile } from "fs/promises"
 
 
 const MAX_UPLOAD_SIZE = 10 * 1024* 1024 // 10MB
@@ -22,16 +24,15 @@ export async function uploadPhoto(formData: FormData) {
     const title = filename.replace("_", " ");
     
     if(!upload) throw new Error("No file provided.")
-    
+
     try {
 
         const arrayBuffer = await upload.arrayBuffer();
         const buffer = Buffer.from(arrayBuffer);
 
-        // EXIF data extracted
-        const tags = ExifReader.load(buffer, {includeUnknown: true, expanded: true});
-        const metadata = await sharp(buffer).metadata();
-
+        // Get EXIF Tags
+        const tags = await getTagsFromBuffer(buffer);
+        
         // Resize
         const resized = await resize(buffer, MAX_UPLOAD_SIZE);
 
@@ -59,10 +60,10 @@ export async function uploadPhoto(formData: FormData) {
             data: {
 
                 filename: filename,
-                width: metadata.width,
-                height: metadata.height,
+                width: tags.ImageWidth || NaN,
+                height: tags.ImageHeight || NaN,
                 fileSize: uploaded["bytes"] as number,
-                mimeType: metadata.format,
+                mimeType: tags.MIMEType || "Unknown",
 
                 publicID: uploaded["public_id"] as string,
                 assetID: uploaded["asset_id"] as string,
@@ -70,62 +71,71 @@ export async function uploadPhoto(formData: FormData) {
                 secureURL: uploaded["secure_url"] as string,
 
                 title: title,
-
-                // latitude: tags.gps?.Latitude,
-                // longitude: tags.gps?.Longitude
             }
         })
 
-        if(!resultDB) throw new Error("Error adding image to database: " + filename)
+        if(!resultDB) {
+            console.log("Error adding image to database: " + filename)
+            throw new Error("Error adding image to database: " + filename)
+        }
 
         // EXIF Data
-        const exifData = tags.exif
-        if(exifData) {
 
-            const resultExifDB = await prisma.exifData.create({
-                data: {
-                    photoID: resultDB.id,
+        const resultExifDB = await prisma.exifData.create({
+            data: {
+                photoID: resultDB.id,
 
-                    make: exifData.Make?.description,
-                    model: exifData.Model?.description,
-                    lens: exifData.LensModel?.description,
+                make: tags.Make,
+                model: tags.Model,
+                lens: tags.LensInfo,
 
-                    shutterSpeed: exifData.ShutterSpeedValue?.description,
-                    aperture: parseFloat(exifData.ApertureValue?.description || "NaN"),
-                    iso: parseInt(exifData.ISOSpeedRatings?.description || "NaN"),
-                    focalLength: parseFloat(exifData.FocalLength?.description || "NaN"),
-                    exposureComp: parseFloat(exifData.ExposureBiasValue?.description || "NaN"),
+                shutterSpeed: tags.ExposureTime,
+                aperture: tags.FNumber,
+                iso: tags.ISO,
+                focalLength: tags.FocalLength,
+                exposureComp: tags.ExposureCompensationSetting,
 
-                    dateTaken: new Date(exifData.DateTimeOriginal?.description || "0"),
-                    whiteBalance: exifData.WhiteBalance?.description
-                }
-            })
+                dateTaken: new Date(tags.DateTimeOriginal?.toString() || Date.now()),
+                orientation: tags.Orientation,
+                flash: tags.Flash,
+                whiteBalance: tags.ColorTemperature?.toString(),
+                meteringMode: tags.MeteringMode,
+                exposureMode: tags.ExposureMode
+            }
+        })
 
-            if(!resultExifDB) throw new Error("Error adding EXIF data to database: " + filename)
-        
+        if(!resultExifDB) {
+            console.log("Error adding EXIF data to database: " + filename)
+            throw new Error("Error adding EXIF data to database: " + filename)
         }
 
         // Fujifilm specific data
-        const fujiDataRaw = tags['makerNotes']
-        if(fujiDataRaw) {
-
-            const fujiData = parseFujifilmEXIF()
+        if(tags.Make == "FUJIFILM") {
 
             const resultFujiDB = prisma.fujifilmData.create({
                 data: {
                     photoID: resultDB.id,
 
-                    filmMode: fujiData.filmMode,
-
+                    filmMode:               tags.FilmMode,
+                    grainEffectRoughness:   tags.GrainEffectRoughness,
+                    grainEffectSize:        tags.GrainEffectSize,
+                    colorChromeEffect:      tags.ColorChromeEffect,
+                    colorChromeFXBlue:      tags.ColorChromeFXBlue,
+                    whiteBalance:           tags.ColorTemperature?.toString(),
+                    whiteBalanceFineTune:   tags.WhiteBalanceFineTune?.toString(),
+                    dynamicRangeSetting:    tags.DynamicRangeSetting,
+                    highlightTone:          tags.HighlightTone,
+                    shadowTone:             tags.ShadowTone,
+                    color:                  tags.Saturation,
+                    sharpness:              tags.Sharpness,
+                    noiseReduction:         tags.NoiseReduction,
+                    clarity:                tags.Clarity?.toString(), 
                 }
             })
 
-
+            if (!resultFujiDB) throw new Error("Could not add Fujfilm EXIF tag data. " + filename)
 
         }
-
-
-
     
     } catch(err) {
         console.log(err)
@@ -156,7 +166,22 @@ export async function resize(buffer: Buffer, sizeLimit: number) {
         return resized;
 }
 
-export async function parseFujifilmEXIF() {
+export async function getTagsFromBuffer(buffer: Buffer) {
 
-    const fuji = fujiTags
+    const { path: tmpPath, cleanup } = await tmpFile({postfix: ".jpg"}) // NEED TO cleanup()
+
+    try{
+        // EXIF data extracted
+        await writeFile(tmpPath, buffer)
+        
+        const exiftool = new ExifTool()     // NEED TO .END()
+        try {
+            const tags = await exiftool.read(tmpPath)
+            return tags
+        } finally {
+            await exiftool.end()
+        }
+    } finally {
+        await cleanup()
+    }
 }

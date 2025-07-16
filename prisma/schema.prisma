@@ -17,11 +17,11 @@ datasource db {
 
 model Photo {
   id            String  @id @default(cuid())
-  filename      String 
-  width         Int
-  height        Int
-  fileSize      Float
-  mimeType      String
+  filename      String? 
+  width         Int?
+  height        Int?
+  fileSize      Float?
+  mimeType      String?
   
   // Cloudinary specific
   publicID      String   @unique
@@ -34,7 +34,7 @@ model Photo {
   updatedAt     DateTime @updatedAt
 
   // Basic metadata
-  title         String
+  title         String?
   caption       String?
   tags          String[]
   isPublic      Boolean  @default(true)
@@ -69,7 +69,7 @@ model ExifData {
   shutterSpeed  String?
   aperture      Float?
   iso           Int?
-  focalLength   Float?
+  focalLength   String?
   exposureComp  Float?
 
   // Other

@@ -12,13 +12,22 @@
     "@prisma/client": "^6.12.0",
     "@prisma/extension-accelerate": "^2.0.2",
     "class-variance-authority": "^0.7.1",
+    "cloudinary": "^2.7.0",
     "clsx": "^2.1.1",
+    "exif": "^0.6.0",
+    "exif-js": "^2.3.0",
+    "exifreader": "^4.31.1",
+    "exiftool-vendored": "^30.3.0",
     "lucide-react": "^0.525.0",
     "next": "15.4.1",
+    "next-cloudinary": "^6.16.0",
     "next-themes": "^0.4.6",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "tailwind-merge": "^3.3.1"
+    "sharp": "^0.34.3",
+    "tailwind-merge": "^3.3.1",
+    "tmp-promise": "^3.0.3",
+    "ts-exif-parser": "^0.2.2"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

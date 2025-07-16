@@ -6,7 +6,7 @@ import { file as tmpFile } from "tmp-promise"
 
 
 
-const imagePath = '/Users/sanjaykumar/Pictures/Florida March 2025/JPEGs/DSCF0915.JPG'
+const imagePath = '/Users/sanjaykumar/Pictures/Florida March 2025/JPEGs/DSCF0902.JPG'
 
 async function testExif() {
 
@@ -20,6 +20,13 @@ async function testExif() {
         const exiftool = new ExifTool()
         const tags = await exiftool.read(tmpPath)
 
+        console.log(tags.Model)
+        console.log(tags.GPSDestLatitude)
+        console.log(tags.SharpnessRange)
+        console.log(tags.WhiteBalanceFineTune?.toString())
+        console.log(tags.DynamicRangeSetting)
+        console.log(tags.Saturation)
+        console.log(tags.FileName)
         console.log(tags.FilmMode)
 
         await cleanup()
