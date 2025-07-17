@@ -26,7 +26,7 @@ export async function uploadPhoto(data: UploadItem) {
     // const filename = data.file;
     const title = data.title;
     const caption = data.caption;
-    const filename = title?.replace(" ", "_"); // TODO: make this replace every space
+    const filename = title?.replaceAll(" ", "_"); 
 
     try {
 

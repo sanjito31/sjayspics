@@ -8,7 +8,7 @@ const ACCEPTED_IMAGE_TYPES = [
     
 
 const UploadItemSchema = z.object({
-    title: z.string().min(1, "Title is required."),
+    title: z.string().min(1, "Title is required.").max(30, "Title can contain maximum 30 characters."),
     caption: z.string().optional(),
     file: z
         .instanceof(File)
