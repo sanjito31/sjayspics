@@ -33,14 +33,14 @@ export default function RootLayout({
                     antialiased
                     bg-background`}
       >
-          <ThemeProvider
+        <ThemeProvider
             attribute="class"
             defaultTheme="system"
             enableSystem
             disableTransitionOnChange
           >
           {children}
-          </ThemeProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -70,10 +70,10 @@ export async function uploadPhoto(data: UploadItem) {
                 fileSize: uploaded["bytes"] as number,
                 mimeType: tags.MIMEType || "Unknown",
 
-                publicID: uploaded["public_id"] as string,
-                assetID: uploaded["asset_id"] as string,
-                url: uploaded["url"] as string,
-                secureURL: uploaded["secure_url"] as string,
+                publicID: uploaded["public_id"]?.toString(),
+                assetID: uploaded["asset_id"]?.toString(),
+                url: uploaded["url"]?.toString(),
+                secureURL: uploaded["secure_url"]?.toString(),
 
                 title: title,
                 caption: caption,
@@ -91,22 +91,22 @@ export async function uploadPhoto(data: UploadItem) {
             data: {
                 photoID: resultDB.id,
 
-                make: tags.Make,
-                model: tags.Model,
-                lens: tags.LensInfo,
+                make: tags.Make?.toString(),
+                model: tags.Model?.toString(),
+                lens: tags.LensInfo?.toString(),
 
-                shutterSpeed: tags.ExposureTime,
+                shutterSpeed: tags.ExposureTime?.toString(),
                 aperture: tags.FNumber,
                 iso: tags.ISO,
-                focalLength: tags.FocalLength,
+                focalLength: tags.FocalLength?.toString(),
                 exposureComp: tags.ExposureCompensationSetting,
 
                 dateTaken: new Date(tags.DateTimeOriginal?.toString() || Date.now()),
                 orientation: tags.Orientation,
-                flash: tags.Flash,
+                flash: tags.Flash?.toString(),
                 whiteBalance: tags.ColorTemperature?.toString(),
-                meteringMode: tags.MeteringMode,
-                exposureMode: tags.ExposureMode
+                meteringMode: tags.MeteringMode?.toString(),
+                exposureMode: tags.ExposureMode?.toString(),
             }
         })
 
@@ -122,19 +122,19 @@ export async function uploadPhoto(data: UploadItem) {
                 data: {
                     photoID: resultDB.id,
 
-                    filmMode:               tags.FilmMode,
-                    grainEffectRoughness:   tags.GrainEffectRoughness,
-                    grainEffectSize:        tags.GrainEffectSize,
-                    colorChromeEffect:      tags.ColorChromeEffect,
-                    colorChromeFXBlue:      tags.ColorChromeFXBlue,
+                    filmMode:               tags.FilmMode?.toString(),
+                    grainEffectRoughness:   tags.GrainEffectRoughness?.toString(),
+                    grainEffectSize:        tags.GrainEffectSize?.toString(),
+                    colorChromeEffect:      tags.ColorChromeEffect?.toString(),
+                    colorChromeFXBlue:      tags.ColorChromeFXBlue?.toString(),
                     whiteBalance:           tags.ColorTemperature?.toString(),
                     whiteBalanceFineTune:   tags.WhiteBalanceFineTune?.toString(),
-                    dynamicRangeSetting:    tags.DynamicRangeSetting,
-                    highlightTone:          tags.HighlightTone,
-                    shadowTone:             tags.ShadowTone,
-                    color:                  tags.Saturation,
-                    sharpness:              tags.Sharpness,
-                    noiseReduction:         tags.NoiseReduction,
+                    dynamicRangeSetting:    tags.DynamicRangeSetting?.toString(),
+                    highlightTone:          tags.HighlightTone?.toString(),
+                    shadowTone:             tags.ShadowTone?.toString(),
+                    color:                  tags.Saturation?.toString(),
+                    sharpness:              tags.Sharpness?.toString(),
+                    noiseReduction:         tags.NoiseReduction?.toString(),
                     clarity:                tags.Clarity?.toString(), 
                 }
             })

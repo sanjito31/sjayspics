@@ -34,7 +34,7 @@ model Photo {
   updatedAt     DateTime @updatedAt
 
   // Basic metadata
-  title         String?
+  title         String
   caption       String?
   tags          String[]
   isPublic      Boolean  @default(true)

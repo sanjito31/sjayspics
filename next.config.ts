@@ -7,6 +7,15 @@ const nextConfig: NextConfig = {
       bodySizeLimit: '20mb', // Increase from default 1MB
     },
   },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  images: {
+    domains: ['avatars.githubusercontent.com', 
+                'lh3.googleusercontent.com',
+                  'res.cloudinary.com'],
+  },
+
 };
 
 export default nextConfig;

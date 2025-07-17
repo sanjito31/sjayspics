@@ -44,3 +44,4 @@ next-env.d.ts
 /app/admin/actions/test-exif.ts
 /app/admin/upload/etc.tsx
 /app/admin/upload/etc2.tsx
+syncCloudinary.ts
