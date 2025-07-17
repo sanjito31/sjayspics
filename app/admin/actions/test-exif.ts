@@ -1,8 +1,9 @@
 // import ExifReader from "exifreader"
 // import { fujiTags } from "./fuji_exiftags"
-import { ExifTool } from "exiftool-vendored"
+// import { ExifTool } from "exiftool-vendored"
 import { readFileSync, writeFileSync } from "fs"
 import { file as tmpFile } from "tmp-promise"
+import sharp from "sharp"
 
 
 
@@ -10,27 +11,23 @@ const imagePath = '/Users/sanjaykumar/Pictures/Florida March 2025/JPEGs/DSCF0902
 
 async function testExif() {
 
-    const { path: tmpPath, cleanup } = await tmpFile({postfix: ".jpg"})
+    const { path: tmpPath } = await tmpFile({postfix: ".jpg"})
 
     try{
 
         const buffer = await readFileSync(imagePath)
-        writeFileSync(tmpPath, buffer)
 
-        const exiftool = new ExifTool()
-        const tags = await exiftool.read(tmpPath)
+        const resized = await sharp(buffer)
+                    .rotate()
+                    .jpeg({ quality: 50 })
+                    .toBuffer()
 
-        console.log(tags.Model)
-        console.log(tags.GPSDestLatitude)
-        console.log(tags.SharpnessRange)
-        console.log(tags.WhiteBalanceFineTune?.toString())
-        console.log(tags.DynamicRangeSetting)
-        console.log(tags.Saturation)
-        console.log(tags.FileName)
-        console.log(tags.FilmMode)
 
-        await cleanup()
-        await exiftool.end()
+        writeFileSync(tmpPath, resized)
+
+        console.log(tmpPath)
+
+        
         
     } catch(err) {
         console.log(err)
@@ -58,3 +55,19 @@ testExif()
         // // const parsed = parseFujifilmMakerNote(exifData['MakerNote'], fujiTags);
         // console.log('Parsed Fuji settings:', parsed);
         // }
+
+
+        // const exiftool = new ExifTool()
+        // const tags = await exiftool.read(tmpPath)
+
+        // console.log(tags.Model)
+        // console.log(tags.GPSDestLatitude)
+        // console.log(tags.SharpnessRange)
+        // console.log(tags.WhiteBalanceFineTune?.toString())
+        // console.log(tags.DynamicRangeSetting)
+        // console.log(tags.Saturation)
+        // console.log(tags.FileName)
+        // console.log(tags.FilmMode)
+
+        // await cleanup()
+        // await exiftool.end()

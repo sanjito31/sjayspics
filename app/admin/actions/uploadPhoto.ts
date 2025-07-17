@@ -1,9 +1,12 @@
+"use server"
+
 import { v2 as cloudinary, UploadApiResponse } from "cloudinary"
 import sharp from "sharp"
 import prisma from "@/lib/prisma"
 import { ExifTool } from "exiftool-vendored"
 import { file as tmpFile } from "tmp-promise"
 import { writeFile } from "fs/promises"
+import { UploadItem } from "@/lib/validation/uploadSchema"
 
 
 const MAX_UPLOAD_SIZE = 10 * 1024* 1024 // 10MB
@@ -14,20 +17,20 @@ cloudinary.config( {
     api_secret: process.env.CLOUDINARY_API_SECRET,
 })
 
-export async function uploadPhoto(formData: FormData) {
+export async function uploadPhoto(data: UploadItem) {
     
-    const upload = formData.get('photo') as File;
-    if (!upload || !(upload instanceof File))
+    // const upload = formData.get('photo') as File;
+    if (!data || !(data.file instanceof File))
         throw new Error("No file uploaded.")
         
-    const filename = upload.name;
-    const title = filename.replace("_", " ");
-    
-    if(!upload) throw new Error("No file provided.")
+    // const filename = data.file;
+    const title = data.title;
+    const caption = data.caption;
+    const filename = title?.replace(" ", "_"); // TODO: make this replace every space
 
     try {
 
-        const arrayBuffer = await upload.arrayBuffer();
+        const arrayBuffer = await data.file.arrayBuffer();
         const buffer = Buffer.from(arrayBuffer);
 
         // Get EXIF Tags
@@ -40,7 +43,9 @@ export async function uploadPhoto(formData: FormData) {
         // Upload
         const uploaded = await new Promise<UploadApiResponse | undefined>((resolve, reject) => {
             cloudinary.uploader.upload_stream({
-                    use_filename: true,
+                    public_id: filename,
+                    auto_orientation: false,
+                    folder: "sjayspics",
                 },
                 (error, uploaded) => {
                 if(error) 
@@ -71,6 +76,7 @@ export async function uploadPhoto(formData: FormData) {
                 secureURL: uploaded["secure_url"] as string,
 
                 title: title,
+                caption: caption,
             }
         })
 
@@ -110,9 +116,9 @@ export async function uploadPhoto(formData: FormData) {
         }
 
         // Fujifilm specific data
-        if(tags.Make == "FUJIFILM") {
+        if(tags.Make?.trim().toUpperCase().includes("FUJIFILM")) {
 
-            const resultFujiDB = prisma.fujifilmData.create({
+            const resultFujiDB = await prisma.fujifilmData.create({
                 data: {
                     photoID: resultDB.id,
 
@@ -133,9 +139,13 @@ export async function uploadPhoto(formData: FormData) {
                 }
             })
 
+            console.log(resultFujiDB)
+
             if (!resultFujiDB) throw new Error("Could not add Fujfilm EXIF tag data. " + filename)
 
         }
+
+        return uploaded
     
     } catch(err) {
         console.log(err)
@@ -152,6 +162,7 @@ export async function resize(buffer: Buffer, sizeLimit: number) {
 
     do {
         resized = await sharp(buffer)
+            .rotate()
             .jpeg({ quality: quality })
             .toBuffer()
 
