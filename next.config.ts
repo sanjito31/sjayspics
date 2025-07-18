@@ -11,9 +11,9 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
   images: {
-    domains: ['avatars.githubusercontent.com', 
-                'lh3.googleusercontent.com',
-                  'res.cloudinary.com'],
+    remotePatterns: [ new URL("https://avatars.githubusercontent.com/**"), 
+                      new URL('https://lh3.googleusercontent.com/**'), 
+                      new URL('https://res.cloudinary.com/**')],
   },
 
 };

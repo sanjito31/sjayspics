@@ -41,6 +41,7 @@ yarn-error.log*
 next-env.d.ts
 
 /app/generated/prisma
+.ignore
 test-exif.ts
 fuji_exiftags.ts
 etc.tsx

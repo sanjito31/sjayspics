@@ -139,7 +139,7 @@ export async function uploadPhoto(data: UploadItem) {
                 }
             })
 
-            console.log(resultFujiDB)
+            // console.log(resultFujiDB)
 
             if (!resultFujiDB) throw new Error("Could not add Fujfilm EXIF tag data. " + filename)
 
