@@ -40,6 +40,13 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# other branch things
+__pycache__
+.idea
+.venv
+.ignored
+
+
 /app/generated/prisma
 .ignore
 test-exif.ts
