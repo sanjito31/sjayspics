@@ -11,3 +11,6 @@ chatgpt.py
 client/node_modules
 client/build
 .idea
+.next
+/app
+*.ts
