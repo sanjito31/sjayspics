@@ -39,13 +39,13 @@ export async function uploadPhoto(data: UploadItem) {
         // Resize
         const resized = await resize(buffer, MAX_UPLOAD_SIZE);
 
-        
+
         // Upload
         const uploaded = await new Promise<UploadApiResponse | undefined>((resolve, reject) => {
             cloudinary.uploader.upload_stream({
                     public_id: filename,
                     auto_orientation: false,
-                    folder: "sjayspics",
+                    asset_folder: "sjayspics",
                 },
                 (error, uploaded) => {
                 if(error) 
@@ -164,6 +164,7 @@ export async function resize(buffer: Buffer, sizeLimit: number) {
         resized = await sharp(buffer)
             .rotate()
             .jpeg({ quality: quality })
+            .keepMetadata()
             .toBuffer()
 
         quality = Math.max(0, quality - 10)
