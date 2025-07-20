@@ -18,8 +18,8 @@ datasource db {
 model Photo {
   id            String  @id @default(cuid())
   filename      String? 
-  width         Int?
-  height        Int?
+  width         Int
+  height        Int
   fileSize      Float?
   mimeType      String?
   

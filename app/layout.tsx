@@ -16,8 +16,8 @@ const ibmMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Sanjay Kumar Photography",
-  description: "An exif photo portfolio for the photography of Sanjay Kumar.",
+  title: "sanjays pics",
+  description: "An EXIF photo portfolio for the photography of Sanjay Kumar.",
 };
 
 export default function RootLayout({
