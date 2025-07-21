@@ -203,7 +203,8 @@ export async function getTagsFromBuffer(buffer: Buffer) {
         
         console.log(readdirSync(path.join(process.cwd(), 'vendor', 'exiftool')))
         const exiftool = new ExifTool({
-            exiftoolPath: path.join(process.cwd(), "vendor", "exiftool", "exiftool")
+            exiftoolPath: path.join(process.cwd(), "vendor", "exiftool", "exiftool"),
+            ignoreShebang: true,
         })     // NEED TO .END()
         try {
             const tags = await exiftool.read(tmpPath)
