@@ -22,7 +22,7 @@ export async function uploadPhoto(data: UploadItem) {
     // const upload = formData.get('photo') as File;
     if (!data || !(data.file instanceof File))
         throw new Error("No file uploaded.")
-        
+    console.log(data.file.name)
     // const filename = data.file;
     const title = data.title;
     const caption = data.caption;
@@ -141,15 +141,18 @@ export async function uploadPhoto(data: UploadItem) {
 
             // console.log(resultFujiDB)
 
-            if (!resultFujiDB) throw new Error("Could not add Fujfilm EXIF tag data. " + filename)
-
+            if (!resultFujiDB) {
+                console.log("Error adding Fujifilm EXIF tag data: " + filename)
+                throw new Error("Error adding Fujifilm EXIF tag data:  " + filename)
+            }
         }
 
         return uploaded
     
     } catch(err) {
-        console.log(err)
-        return null
+        const e = err as Error;
+        console.log(e)
+        return e
     }
 
 }

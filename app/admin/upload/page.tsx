@@ -56,17 +56,20 @@ export default function Upload() {
     }
 
     const onSubmit: SubmitHandler<UploadFormValues> = async (data) => {
-        // console.log(data)
+        console.log(data)
         setLoading(true)
 
         const uploads = data.items 
 
         const promises = uploads.map(async (upload) => {
+            console.log("Uploading: ", upload.title)
             try {
                 await uploadPhoto(upload)
             } catch(err) {
-                if(err)
-                    setError(e => [...e, ("Error on '" + upload.title + "': " + err?.toString())])
+                const error = err as Error;
+                
+                console.log("Error uploading: ", error.toString())
+                setError(e => [...e, ("Error on '" + upload.title + "': " + error.toString())])
             }
         })
         await Promise.all(promises)
