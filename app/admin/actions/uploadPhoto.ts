@@ -12,8 +12,8 @@ import { UploadItem } from "@/lib/validation/uploadSchema"
 const MAX_UPLOAD_SIZE = 10 * 1024* 1024 // 10MB
 
 cloudinary.config( {
-    cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
-    api_key: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
     api_secret: process.env.CLOUDINARY_API_SECRET,
 })
 
