@@ -17,7 +17,7 @@ const nextConfig: NextConfig = {
   },
   output: 'standalone',
   outputFileTracingIncludes: {
-    '/app/api/**': ['./vendor/exiftool/**/*'],
+    '/api/upload-photo': ['./vendor/exiftool/**/*'],
   }
 
 };
