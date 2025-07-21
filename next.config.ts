@@ -15,11 +15,6 @@ const nextConfig: NextConfig = {
                       new URL('https://lh3.googleusercontent.com/**'), 
                       new URL('https://res.cloudinary.com/**')],
   },
-  output: 'standalone',
-  outputFileTracingIncludes: {
-    '/api/upload-photo': ['./vendor/exiftool/**/*'],
-  }
-
 };
 
 export default nextConfig;

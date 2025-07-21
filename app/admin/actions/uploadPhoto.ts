@@ -3,11 +3,11 @@
 import { v2 as cloudinary, UploadApiResponse } from "cloudinary"
 import sharp from "sharp"
 import prisma from "@/lib/prisma"
-import path from "path";
+// import path from "path";
 import { ExifTool } from "exiftool-vendored"
 import { file as tmpFile } from "tmp-promise"
 import { writeFile } from "fs/promises"
-import { readdirSync } from "fs";
+// import { readdirSync } from "fs";
 // import { UploadItemValues } from "@/lib/validation/uploadSchema"
 
 
@@ -201,12 +201,14 @@ export async function getTagsFromBuffer(buffer: Buffer) {
         // EXIF data extracted
         await writeFile(tmpPath, buffer)
         
-        console.log(readdirSync(path.join(process.cwd(), 'vendor', 'exiftool')))
-        const exiftool = new ExifTool({
-            ignoreShebang: true,
-            checkPerl: false,
-            exiftoolPath: path.join(process.cwd(), "vendor", "exiftool", "exiftool"),
-        })     // NEED TO .END()
+        // console.log(readdirSync(path.join(process.cwd(), 'vendor', 'exiftool')))
+        const exiftool = new ExifTool()
+        //     {
+        //     ignoreShebang: true,
+        //     checkPerl: false,
+        //     exiftoolPath: path.join(process.cwd(), "vendor", "exiftool", "exiftool"),
+        // }
+         // NEED TO .END()
         try {
             const tags = await exiftool.read(tmpPath)
             return tags
