@@ -6,7 +6,7 @@ import prisma from "@/lib/prisma"
 import { ExifTool } from "exiftool-vendored"
 import { file as tmpFile } from "tmp-promise"
 import { writeFile } from "fs/promises"
-import { UploadItem } from "@/lib/validation/uploadSchema"
+// import { UploadItemValues } from "@/lib/validation/uploadSchema"
 
 
 const MAX_UPLOAD_SIZE = 10 * 1024* 1024 // 10MB
@@ -17,21 +17,31 @@ cloudinary.config( {
     api_secret: process.env.CLOUDINARY_API_SECRET,
 })
 
-export async function uploadPhoto(data: UploadItem) {
+//data: UploadItemValues
+
+
+type uploadPhotoProps = {
+    title: string,
+    caption: string | undefined,
+    buffer: Buffer,
+}
+
+
+export async function uploadPhoto({ title, caption, buffer }: uploadPhotoProps ) {
     
     // const upload = formData.get('photo') as File;
-    if (!data || !(data.file instanceof File))
+    if (!buffer)
         throw new Error("No file uploaded.")
-    console.log(data.file.name)
+    // console.log(data.file.name)
     // const filename = data.file;
-    const title = data.title;
-    const caption = data.caption;
+    // const title = data.title;
+    // const caption = data.caption;
     const filename = title?.replaceAll(" ", "_"); 
 
     try {
 
-        const arrayBuffer = await data.file.arrayBuffer();
-        const buffer = Buffer.from(arrayBuffer);
+        // const arrayBuffer = await data.file.arrayBuffer();
+        // const buffer = Buffer.from(arrayBuffer);
 
         // Get EXIF Tags
         const tags = await getTagsFromBuffer(buffer);

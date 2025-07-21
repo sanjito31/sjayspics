@@ -1,6 +1,6 @@
 "use client"
 
-import { uploadPhoto } from "@/app/admin/actions/uploadPhoto"
+// import { uploadPhoto } from "@/app/admin/actions/uploadPhoto"
 import React, { useState, useRef } from "react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -11,6 +11,7 @@ import { UploadFormSchema, UploadFormValues } from "@/lib/validation/uploadSchem
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { AlertCircleIcon, X, Upload as UploadIcon } from "lucide-react"
+import { upload as blobUpload } from "@vercel/blob/client"
 
 
 export default function Upload() {
@@ -62,14 +63,43 @@ export default function Upload() {
         const uploads = data.items 
 
         const promises = uploads.map(async (upload) => {
-            console.log("Uploading: ", upload.title)
+            
             try {
-                await uploadPhoto(upload)
+                console.log("Attemping blob upload: ", upload.title)
+                const blobResult = await blobUpload(upload.file.name, upload.file, {
+                    access: 'public',
+                    handleUploadUrl: '/api/blob-upload'
+                })
+                console.log("Blob upload successful: ", upload.title)
+
+                const payload = {
+                    title: upload.title,
+                    caption: upload.caption,
+                    url: blobResult.url
+                }
+
+                const res = await fetch('/api/upload-photo', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                })
+
+
+                const body = await res.json()
+                if(!res.ok) {
+                    throw new Error("POST Error: " + body.error)
+                }
+                
+                console.log("Upload successful: " + upload.title)
+
+                
+
+                // await uploadPhoto(upload)
             } catch(err) {
                 const error = err as Error;
                 
-                console.log("Error uploading: ", error.toString())
-                setError(e => [...e, ("Error on '" + upload.title + "': " + error.toString())])
+                console.log("Error uploading: ", error.message)
+                setError(e => [...e, ("Error on '" + upload.title + "': " + error.message)])
             }
         })
         await Promise.all(promises)

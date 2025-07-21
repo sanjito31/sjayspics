@@ -21,7 +21,7 @@ const UploadItemSchema = z.object({
         }),
 })
 
-export type UploadItem = z.infer<typeof UploadItemSchema>
+export type UploadItemValues = z.infer<typeof UploadItemSchema>
 
 export const UploadFormSchema = z.object({
     items: z
@@ -30,3 +30,20 @@ export const UploadFormSchema = z.object({
 })
 
 export type UploadFormValues = z.infer<typeof UploadFormSchema>
+
+
+export const UploadItemAPISchema = z.object({
+    title: z.string().min(1, "Title is required.").max(30, "Title can contain maximum 30 characters."),
+    caption: z.string().optional(),
+    url: z.string()
+})
+
+export type UploadItemAPIValues = z.infer<typeof UploadItemAPISchema>
+
+
+
+// export const UploadItemBuffer = z.object({
+//     title: z.string().min(1, "Title is required.").max(30, "Title can contain maximum 30 characters."),
+//     caption: z.string().optional(),
+//     buffer: z.buffer()
+// })
