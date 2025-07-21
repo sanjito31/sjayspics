@@ -4,7 +4,7 @@ import { v2 as cloudinary, UploadApiResponse } from "cloudinary"
 import sharp from "sharp"
 import prisma from "@/lib/prisma"
 // import path from "path";
-import { ExifTool } from "exiftool-vendored"
+import { ExifTool, exiftoolPath } from "exiftool-vendored"
 import { file as tmpFile } from "tmp-promise"
 import { writeFile } from "fs/promises"
 // import { readdirSync } from "fs";
@@ -202,12 +202,12 @@ export async function getTagsFromBuffer(buffer: Buffer) {
         await writeFile(tmpPath, buffer)
         
         // console.log(readdirSync(path.join(process.cwd(), 'vendor', 'exiftool')))
-        const exiftool = new ExifTool()
-        //     {
-        //     ignoreShebang: true,
-        //     checkPerl: false,
-        //     exiftoolPath: path.join(process.cwd(), "vendor", "exiftool", "exiftool"),
-        // }
+        const exiftool = new ExifTool(
+            {
+                exiftoolPath: exiftoolPath,
+                ignoreShebang: true,
+                checkPerl: false,
+        })
          // NEED TO .END()
         try {
             const tags = await exiftool.read(tmpPath)
