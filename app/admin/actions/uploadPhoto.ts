@@ -7,6 +7,7 @@ import path from "path";
 import { ExifTool } from "exiftool-vendored"
 import { file as tmpFile } from "tmp-promise"
 import { writeFile } from "fs/promises"
+import { readdirSync } from "fs";
 // import { UploadItemValues } from "@/lib/validation/uploadSchema"
 
 
@@ -162,7 +163,7 @@ export async function uploadPhoto({ title, caption, buffer }: uploadPhotoProps )
     
     } catch(err) {
         const e = err as Error;
-        console.log(e)
+        console.log("uploadPhoto: " + e)
         return e
     }
 
@@ -200,6 +201,7 @@ export async function getTagsFromBuffer(buffer: Buffer) {
         // EXIF data extracted
         await writeFile(tmpPath, buffer)
         
+        console.log(readdirSync(path.join(process.cwd(), 'vendor', 'exiftool')))
         const exiftool = new ExifTool({
             exiftoolPath: path.join(process.cwd(), "vendor", "exiftool", "exiftool")
         })     // NEED TO .END()
