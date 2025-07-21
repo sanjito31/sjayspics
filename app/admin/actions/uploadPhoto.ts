@@ -3,6 +3,7 @@
 import { v2 as cloudinary, UploadApiResponse } from "cloudinary"
 import sharp from "sharp"
 import prisma from "@/lib/prisma"
+import path from "path";
 import { ExifTool } from "exiftool-vendored"
 import { file as tmpFile } from "tmp-promise"
 import { writeFile } from "fs/promises"
@@ -199,7 +200,9 @@ export async function getTagsFromBuffer(buffer: Buffer) {
         // EXIF data extracted
         await writeFile(tmpPath, buffer)
         
-        const exiftool = new ExifTool()     // NEED TO .END()
+        const exiftool = new ExifTool({
+            exiftoolPath: path.join(process.cwd(), "vendor", "exiftool", "exiftool")
+        })     // NEED TO .END()
         try {
             const tags = await exiftool.read(tmpPath)
             return tags
