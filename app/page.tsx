@@ -1,8 +1,8 @@
 import React from "react";
 import { getPhotosHomepage } from "@/lib/db";
 import { PhotoAllResponse } from "@/lib/types/photo";
-import GalleryCard from "@/components/GalleryCard";
 import Link from "next/link";
+import GalleryWrapper from "@/components/GalleryWrapper";
 
 
 
@@ -20,9 +20,7 @@ export default async function Home() {
 
   
   return (
-    // mx-auto items-center
-    <div
-      className="flex flex-col max-w-[1280px] mx-auto font-mono">
+    <div className="flex flex-col max-w-[1280px] mx-auto font-mono">
         <div className="grid grid-cols-5 gap-4">
           <Link 
             href="/"
@@ -30,14 +28,9 @@ export default async function Home() {
               <h1 className=" text-[14px] my-5 ml-5">sanjayspics.com</h1>
           </Link>
         </div>      
-    
-          {!photos ? <div>Error retrieving photos</div> : photos.map((photo, idx) => (
-            <div key={idx}>
-              <GalleryCard photo={photo} />
-            </div>
-          ))}
-    
-    
+          {!photos ? <div>Error retrieving photos</div>
+                   : <GalleryWrapper photos={photos} />
+          }
     </div>
   );
 }

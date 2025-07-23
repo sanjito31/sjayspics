@@ -2,36 +2,36 @@ import Image from "next/image"
 import { PhotoAllResponse } from "@/lib/types/photo"
 import { Camera, Aperture } from "lucide-react"
 import Link from "next/link"
-// import { useRouter } from "next/navigation"
 
 
 type GalleryCardProps = {
     photo: PhotoAllResponse
+    idx: number
+    onImageClick: (photo: PhotoAllResponse) => void
 }
 
-export default function GalleryCard( { photo }: GalleryCardProps) {
+export default function GalleryCard( { photo, idx, onImageClick }: GalleryCardProps) {
 
 
     return (
-        <div className="grid grid-cols-5 gap-4 space-y-2"> {/* flex mx-auto */}
-            {/* w-1/5 */}
-            {/* <div className=""></div> */}
-            {/* w-3/5 */}
-            <Link 
-                className="col-start-2 col-span-3"
-                href={`/photo/${photo.publicID}`}>
+        <div className="grid grid-cols-5 gap-4 space-y-2">         
+            <div
+                className="cursor-pointer col-start-2 col-span-3"
+                onClick={() => onImageClick(photo)}>
                 <Image
-                     
+                    className="w-full h-auto"
                     width={photo.width}
                     height={photo.height}
                     quality={50}
-                    priority={true}
-                    // sizes=""                
+                    loading={idx < 6 ? "eager" : "lazy"}
+                    priority={idx < 6}
+                    sizes="(max-width: 768px) 100vw, (max-width: 1280px) 762px, 762px"                
                     src={photo.secureURL}
                     alt={photo?.title || "No title given"} 
                     />
-            </Link>
-            {/* flex flex-col ml-7 w-1/5 */}
+            </div>
+
+    
             <div className="col-start-5 col-span-1 ml-3 text-[14px] font-extrabold">
                 <h1 className="">{photo.title.toUpperCase()}</h1><br/>
                 <div className="text-gray-400">
