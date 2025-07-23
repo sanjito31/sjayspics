@@ -199,6 +199,31 @@ export async function addToEXIFTable(
     if(tags.ExposureTime) {
         shutterSpeed = convertDecToFracString(tags.ExposureTime)
     }
+
+    const lens = tags.LensModel?.toString();
+    // if(tags.LensInfo && Array.isArray(tags.LensInfo)) {
+    //     const arr: number[] = (tags.LensInfo as number[])
+    //     lens = ""
+
+    //     // Prime lens
+    //     if(arr.length === 2) {
+    //         lens += `${arr[0]}mm F${}`
+        
+
+    //     // fixed zoom
+    //     } else if(arr.length === 3) {
+
+
+    //     // kit lens
+    //     } else if (arr.length === 4) {
+
+        
+    //     // no idea
+    //     } else {
+    //         let lens = tags.LensModel?.toString();
+    //     }
+    // }
+
     
 
     const resultExifDB = await prisma.exifData.create({
@@ -207,7 +232,7 @@ export async function addToEXIFTable(
 
             make: tags.Make?.toString(),
             model: tags.Model?.toString(),
-            lens: tags.LensMake?.toString() + " " + tags.LensModel?.toString(),
+            lens: lens,
 
             shutterSpeed: shutterSpeed, 
             aperture: tags.FNumber as number,

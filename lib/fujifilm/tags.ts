@@ -1,5 +1,5 @@
 export type FujifilmTagKey = keyof typeof FujifilmTags
-
+// https://exiftool.org/TagNames/FujiFilm.html
 export function isFujifilmTagKey(key: string): key is FujifilmTagKey {
     return key in FujifilmTags;
 }
