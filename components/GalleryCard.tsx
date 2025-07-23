@@ -50,7 +50,8 @@ export default function GalleryCard( { photo }: GalleryCardProps) {
                     <span>{photo.fujiData?.filmMode}</span>
                 </Link>
                 <br/>
-                <span className="">{photo.caption}</span><br/>
+                <br/>
+                <span className="font-light mt-4"><i>{photo.caption}</i></span><br/>
                 </div>
             </div>
         </div>

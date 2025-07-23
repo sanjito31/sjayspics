@@ -2,7 +2,7 @@
 
 import { NextResponse } from "next/server";
 import { UploadItemAPISchema } from "@/lib/validation/uploadSchema";
-import { uploadPhoto } from "@/app/admin/actions/uploadPhoto";
+import { uploadPhoto } from "@/lib/upload/upload-photo";
 import { del } from "@vercel/blob"
 import { revalidatePath } from "next/cache";
 
@@ -11,7 +11,7 @@ export async function POST(request: Request) {
 
     try {
         const json = await request.json();
-        const { title, caption, url } = UploadItemAPISchema.parse(json)
+        const { title, caption, url, filename } = UploadItemAPISchema.parse(json)
 
 
         const res = await fetch(url);
@@ -24,7 +24,7 @@ export async function POST(request: Request) {
 
         const buffer = Buffer.from(await res.arrayBuffer());
 
-        await uploadPhoto({ title, caption, buffer })
+        await uploadPhoto({ title, caption, buffer, filename })
 
         await del(url)
         revalidatePath("/")

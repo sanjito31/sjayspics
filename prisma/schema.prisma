@@ -17,10 +17,6 @@ datasource db {
 model Photo {
   id            String  @id @default(cuid())
   filename      String? 
-  width         Int
-  height        Int
-  fileSize      Float?
-  mimeType      String?
   
   // Cloudinary specific
   publicID      String   @unique
@@ -38,6 +34,10 @@ model Photo {
   tags          String[]
   isPublic      Boolean  @default(true)
   filmPhoto     Boolean  @default(false)
+  width         Int
+  height        Int
+  fileSize      Float?
+  mimeType      String?
 
   // Location
   latitude      Float?
@@ -73,7 +73,7 @@ model ExifData {
 
   // Other
   dateTaken     DateTime?
-  orientation   Int?
+  orientation   String?
   flash         String?
   whiteBalance  String?
   meteringMode  String?
@@ -88,7 +88,7 @@ model FujifilmData {
   photoID       String    @id
   photo         Photo     @relation(fields: [photoID], references: [id], onDelete: Cascade)
 
-                                        // https://exiftool.org/TagNames/FujiFilm.html
+  // https://exiftool.org/TagNames/FujiFilm.html
   filmMode                String?       // 0x1401
   grainEffectRoughness    String?       // 0x1047
   grainEffectSize         String?       // 0x104C
@@ -96,7 +96,9 @@ model FujifilmData {
   colorChromeFXBlue       String?       // 0x104E
   whiteBalance            String?       // 0x1002
   whiteBalanceFineTune    String?       // 0x100A
+  colorTemperature        String?       // 0x1005
   dynamicRangeSetting     String?       // 0x1402
+  developmentDynamicRange String?       // 0x1403
   highlightTone           String?       // 0x1041
   shadowTone              String?       // 0x1040
   color                   String?       // 0x1003

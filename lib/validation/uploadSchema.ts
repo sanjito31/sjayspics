@@ -35,7 +35,8 @@ export type UploadFormValues = z.infer<typeof UploadFormSchema>
 export const UploadItemAPISchema = z.object({
     title: z.string().min(1, "Title is required.").max(30, "Title can contain maximum 30 characters."),
     caption: z.string().optional(),
-    url: z.string()
+    url: z.string(),
+    filename: z.string()
 })
 
 export type UploadItemAPIValues = z.infer<typeof UploadItemAPISchema>

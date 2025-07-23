@@ -75,7 +75,8 @@ export default function Upload() {
                 const payload = {
                     title: upload.title,
                     caption: upload.caption,
-                    url: blobResult.url
+                    url: blobResult.url,
+                    filename: upload.file.name,
                 }
 
                 const res = await fetch('/api/upload-photo', {
