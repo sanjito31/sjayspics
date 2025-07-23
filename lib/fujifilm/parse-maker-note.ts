@@ -38,9 +38,9 @@ const DOUBLE_SIZE = 8
  */
 export async function parseFujifilmMakerNote(
     bytes: Buffer
-): Promise<Record<string, (string | number[])>> {
+): Promise<Record<string, (string | number | number[])>> {
 
-    const data: Record<string, (string | number[])> = {}
+    const data: Record<string, (string | number | number[])> = {}
     const entries = bytes.readUIntLE(ENTRY_COUNT_OFFSET, ENTRY_COUNT_SIZE)
 
     for(let i = 0; i < entries; i++) {
@@ -49,7 +49,7 @@ export async function parseFujifilmMakerNote(
         const index = START_OFFSET + (ENTRY_SIZE * i)
 
         // Tag Name
-        const tag: string = "0x" + bytes.readUint16LE(index + TAG_ID_OFFSET).toString(16);
+        const tag: string = "0x" + bytes.readUint16LE(index + TAG_ID_OFFSET).toString(16).toUpperCase();
         
         // Type value (short, long, chars, etc)
         const typeValueRaw = bytes.readUint16LE(index + TYPE_SIZE_OFFSET);
@@ -72,7 +72,7 @@ async function parseValueIFD(
     index: number,          // from which entry to start on
     type: number,           // the type of data to read
     count: number,          // the number of elements to read 
-): Promise<string | number[]> {
+): Promise<string | number | number[]> {
 
     // The function we'll use based on type
     let readerFn: (offset: number) => number;
@@ -176,14 +176,16 @@ async function parseValueIFD(
         const numerator = arr.pop() as number
 
         if (denominator !== 0) {
-            arr.push(numerator / denominator)
+            return (numerator / denominator)
         } else {
-            arr.push(0)
+            return 0
         }
     }
-    // Return everything as string
-    // } else {
-        // everything else
-    return arr
-    // }
+    
+    if(count === 1) {
+        return arr[0]
+    } else {
+        return arr
+    }
+    
 }
