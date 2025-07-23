@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google"
 import "./globals.css";
+// import { Toaster } from "sonner";
 // import { ThemeProvider } from "@/components/theme-provider";
 
 const ibmSans = IBM_Plex_Sans({
@@ -41,6 +42,7 @@ export default function RootLayout({
             disableTransitionOnChange
           > */}
           {children}
+
         {/* </ThemeProvider> */}
       </body>
     </html>

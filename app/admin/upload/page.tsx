@@ -1,6 +1,5 @@
 "use client"
 
-// import { uploadPhoto } from "@/app/admin/actions/uploadPhoto"
 import React, { useState, useRef } from "react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -12,6 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { AlertCircleIcon, X, Upload as UploadIcon } from "lucide-react"
 import { upload as blobUpload } from "@vercel/blob/client"
+import { Toaster, toast } from "sonner"
 
 
 export default function Upload() {
@@ -93,9 +93,7 @@ export default function Upload() {
                 
                 console.log("Upload successful: " + upload.title)
 
-                
 
-                // await uploadPhoto(upload)
             } catch(err) {
                 const error = err as Error;
                 
@@ -105,6 +103,7 @@ export default function Upload() {
         })
         await Promise.all(promises)
         setLoading(false)
+        toast.success("All photos uploaded successfully.")
         reset()
     }
 
@@ -166,6 +165,7 @@ export default function Upload() {
                     <div className="flex-grow">
                     
                         <Input
+                            disabled={loading}
                             className="mb-2"
                             placeholder="Title"
                             defaultValue={field.title}
@@ -177,6 +177,7 @@ export default function Upload() {
                             </p>
                         )}
                         <Textarea 
+                            disabled={loading}
                             placeholder="Caption (optional)"
                             {...register(`items.${idx}.caption` as const)}
                             defaultValue={field.caption}
@@ -189,6 +190,7 @@ export default function Upload() {
                     </div>
 
                     <Button
+                        disabled={loading}
                         type="button"
                         variant="outline"
                         onClick={() => remove(idx)}
@@ -210,25 +212,28 @@ export default function Upload() {
 
             {fields.length > 0 && (
                 <div style={{ marginTop: 16 }}>
-                <Button
-                    type="button"
-                    variant="outline"
-                    className="hover:cursor-pointer"
-                    onClick={() => fileInputRef.current?.click()}
-                    style={{ marginRight: 12 }}
-                >
-                    Add more
-                </Button>
+                    <Button
+                        disabled={loading}
+                        type="button"
+                        variant="outline"
+                        className="hover:cursor-pointer"
+                        onClick={() => fileInputRef.current?.click()}
+                        style={{ marginRight: 12 }}
+                    >
+                        Add more
+                    </Button>
 
-                { loading ? <Button>Uploading...</Button> 
-                            : <Button variant="default" 
-                                    className="hover:cursor-pointer"
-                                    type="submit">Upload</Button>}
-                
+                    { loading ? <Button>Uploading...</Button> 
+                                : <Button variant="default" 
+                                        className="hover:cursor-pointer"
+                                        type="submit">Upload</Button>}
                 </div>
             )}
             
             </form>
+            <Toaster 
+                position="top-center"
+            />
         </div>
     )
 }

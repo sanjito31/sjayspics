@@ -11,7 +11,6 @@ type LightboxProps = {
 export default function Lightbox({ photo, onClose }: LightboxProps) {
   
     const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-        console.log(e.key)
         if (e.key === 'Escape') {
             onClose()
         }
