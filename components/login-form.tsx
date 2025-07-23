@@ -59,9 +59,7 @@ export function LoginForm({
 
     if(success) {
       router.push("/admin/dashboard")
-      setLoading(false)
     } else {
-      // console.log("Error: ", message)
       setError("Invalid email or password.")
       setLoading(false)
     }
@@ -137,11 +135,9 @@ export function LoginForm({
                       </a>
                     </div>
                   </div>
-                  {loading ? <Button className="w-full">Logging in...</Button> 
-                    : <Button type="submit" className="w-full">
-                        Login
-                      </Button>
-                  }
+                  <Button type="submit" className="w-full" disabled={loading}>
+                    {loading ? "Logging in..." : "Login"}
+                  </Button>
                 </div>   
               </div>
             </form>
