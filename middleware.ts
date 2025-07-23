@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSessionCookie } from "better-auth/cookies";
-import { auth } from "./lib/auth/auth";
  
 export async function middleware(request: NextRequest) {
 	const sessionCookie = getSessionCookie(request);
@@ -13,5 +12,5 @@ export async function middleware(request: NextRequest) {
 }
  
 export const config = {
-	matcher: ["/admin/:path*"], // Specify the routes the middleware applies to
+	matcher: ["/admin/:path*", "/api/:path*"], 
 };
