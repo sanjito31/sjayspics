@@ -23,7 +23,7 @@ const data = {
       items: [
         {
           title: "Overview",
-          url: "#",
+          url: "/admin/dashboard",
           isActive: true,
         },
         {
