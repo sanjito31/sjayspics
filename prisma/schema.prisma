@@ -110,6 +110,29 @@ model FujifilmData {
   updatedAt     DateTime  @updatedAt
 }
 
+model FujifilmRecipes {
+  id                      String  @id @default(cuid())
+  recipeName              String
+
+  filmSim                 String
+  colorTemperature        String  @default("auto")
+  developmentDynamicRange String
+  whiteBalanceFineTune    String
+  noiseReduction          String
+  highlightTone           String
+  shadowTone              String
+  color                   String
+  sharpness               String
+  clarity                 String
+  colorChromeEffect       String
+  colorChromeFXBlue       String
+  grainEffectSize         String
+  grainEffectRoughness    String
+
+  createdAt               DateTime  @default(now())
+  updatedAt               DateTime  @updatedAt
+}
+
 // model Collection {
 //   id            String  @id @default(cuid())
 //   name          String

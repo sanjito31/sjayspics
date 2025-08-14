@@ -1,5 +1,8 @@
+"use client"
+
 import * as React from "react"
 import { GalleryVerticalEnd } from "lucide-react"
+import { usePathname } from "next/navigation"
 import SignOutButton from "./SignOutButton"
 import {
   Sidebar,
@@ -24,7 +27,6 @@ const data = {
         {
           title: "Overview",
           url: "/admin/dashboard",
-          isActive: true,
         },
         {
           title: "Upload Photos",
@@ -46,11 +48,11 @@ const data = {
       items: [
         {
           title: "View Recipes",
-          url: "#"
+          url: "/admin/fuji/recipes"
         },
         {
           title: "Add New Recipe",
-          url: "#"
+          url: "/admin/fuji/add-recipe"
         }
       ],
     },
@@ -69,6 +71,8 @@ const data = {
 
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const pathname = usePathname()
+  
   return (
     <Sidebar variant="floating" {...props}>
       <SidebarHeader>
@@ -100,10 +104,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 </SidebarMenuButton>
                 {item.items?.length ? (
                   <SidebarMenuSub className="ml-0 border-l-0 px-1.5">
-                    {item.items.map((item) => (
-                      <SidebarMenuSubItem key={item.title}>
-                        <SidebarMenuSubButton asChild isActive={item.isActive}>
-                          <a href={item.url}>{item.title}</a>
+                    {item.items.map((subItem) => (
+                      <SidebarMenuSubItem key={subItem.title}>
+                        <SidebarMenuSubButton asChild isActive={pathname === subItem.url}>
+                          <a href={subItem.url}>{subItem.title}</a>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
                     ))}
