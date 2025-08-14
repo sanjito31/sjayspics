@@ -2,6 +2,7 @@ import Image from "next/image"
 import { PhotoAllResponse } from "@/lib/types/photo"
 import { Camera, Aperture } from "lucide-react"
 import Link from "next/link"
+import { optimizeCloudinaryUrl, getCloudinaryBlurDataUrl } from "@/lib/cloudinary"
 
 
 type GalleryCardProps = {
@@ -11,22 +12,30 @@ type GalleryCardProps = {
 }
 
 export default function GalleryCard( { photo, idx, onImageClick }: GalleryCardProps) {
-
+    
+    const optimizedImageUrl = optimizeCloudinaryUrl(photo.secureURL, {
+        format: 'auto'
+    });
+    
+    const blurDataUrl = getCloudinaryBlurDataUrl(photo.secureURL);
 
     return (
-        <div className="md:grid md:grid-cols-5 md:gap-4 space-y-2">         
+        <div className="md:grid md:grid-cols-5 md:gap-4 space-y-2 mb-4 md:mb-0">         
             <div
                 className="cursor-pointer md:col-start-2 md:col-span-3 px-4 md:px-0"
                 onClick={() => onImageClick(photo)}>
                 <Image
-                    className="w-full h-auto"
+                    className="w-full h-auto animate-in fade-in zoom-in-75 duration-700"
+                    style={{ animationDelay: `${idx * 150}ms` }}
                     width={photo.width}
                     height={photo.height}
-                    quality={50}
-                    loading={idx < 6 ? "eager" : "lazy"}
-                    priority={idx < 6}
+                    loading={idx < 3 ? "eager" : "lazy"}
+                    priority={idx < 3}
+                    fetchPriority={idx < 3 ? "high" : "auto"}
+                    placeholder="blur"
+                    blurDataURL={blurDataUrl}
                     sizes="(max-width: 768px) 100vw, (max-width: 1280px) 762px, 762px"                
-                    src={photo.secureURL}
+                    src={optimizedImageUrl}
                     alt={photo?.title || "No title given"} 
                     />
             </div>

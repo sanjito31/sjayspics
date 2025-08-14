@@ -3,6 +3,7 @@ import { getPhotosHomepage } from "@/lib/db";
 import { PhotoAllResponse } from "@/lib/types/photo";
 import Link from "next/link";
 import GalleryWrapper from "@/components/GalleryWrapper";
+import { optimizeCloudinaryUrl } from "@/lib/cloudinary";
 
 
 
@@ -20,7 +21,26 @@ export default async function Home() {
 
   
   return (
-    <div className="flex flex-col max-w-[1280px] mx-auto font-mono">
+    <>
+      {photos && photos.length > 0 && (
+        <>
+          {photos.slice(0, 2).map((photo, idx) => {
+            const optimizedUrl = optimizeCloudinaryUrl(photo.secureURL, {
+              format: 'auto'
+            });
+            return (
+              <link
+                key={idx}
+                rel="preload"
+                as="image"
+                href={optimizedUrl}
+              />
+            );
+          })}
+        </>
+      )}
+      
+      <div className="flex flex-col max-w-[1280px] mx-auto font-mono">
         <div className="grid grid-cols-5 gap-4">
           <Link 
             href="/"
@@ -31,6 +51,7 @@ export default async function Home() {
           {!photos ? <div>Error retrieving photos</div>
                    : <GalleryWrapper photos={photos} />
           }
-    </div>
+      </div>
+    </>
   );
 }
