@@ -2,7 +2,7 @@ import Image from "next/image"
 import { PhotoAllResponse } from "@/lib/types/photo"
 import { Camera, Aperture } from "lucide-react"
 import Link from "next/link"
-import { optimizeCloudinaryUrl, getCloudinaryBlurDataUrl } from "@/lib/cloudinary"
+import { optimizeCloudinaryUrl } from "@/lib/cloudinary"
 
 
 type GalleryCardProps = {
@@ -16,8 +16,6 @@ export default function GalleryCard( { photo, idx, onImageClick }: GalleryCardPr
     const optimizedImageUrl = optimizeCloudinaryUrl(photo.secureURL, {
         format: 'auto'
     });
-    
-    const blurDataUrl = getCloudinaryBlurDataUrl(photo.secureURL);
 
     return (
         <div className="md:grid md:grid-cols-5 md:gap-4 space-y-2 mb-4 md:mb-0">         
@@ -32,8 +30,6 @@ export default function GalleryCard( { photo, idx, onImageClick }: GalleryCardPr
                     loading={idx < 3 ? "eager" : "lazy"}
                     priority={idx < 3}
                     fetchPriority={idx < 3 ? "high" : "auto"}
-                    placeholder="blur"
-                    blurDataURL={blurDataUrl}
                     sizes="(max-width: 768px) 100vw, (max-width: 1280px) 762px, 762px"                
                     src={optimizedImageUrl}
                     alt={photo?.title || "No title given"} 

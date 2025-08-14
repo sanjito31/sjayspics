@@ -33,10 +33,3 @@ export function optimizeCloudinaryUrl(
   return `${baseUrl}/upload/${transformations}/${resourcePath}`;
 }
 
-export function getCloudinaryBlurDataUrl(url: string): string {
-  return optimizeCloudinaryUrl(url, {
-    width: 10,
-    quality: 10,
-    format: 'webp'
-  });
-}
