@@ -13,16 +13,16 @@ import {
   Eye, 
   EyeOff, 
   Trash2, 
-  CheckSquare, 
-  Square,
-  Filter,
+  // CheckSquare, 
+  // Square,
+  // Filter,
   Calendar,
   Camera
 } from 'lucide-react';
 import { 
   updatePhotoVisibility, 
   deletePhoto, 
-  searchPhotos,
+  // searchPhotos,
   bulkUpdateVisibility,
   bulkDeletePhotos 
 } from '@/lib/admin/photo-management';
@@ -88,6 +88,7 @@ export default function PhotoManagementClient({ photos: initialPhotos }: PhotoMa
         photo.id === photoId ? { ...photo, isPublic: !currentStatus } : photo
       ));
       toast.success(`Photo ${!currentStatus ? 'made public' : 'made private'}`);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       toast.error('Failed to update photo visibility');
     }
@@ -107,6 +108,7 @@ export default function PhotoManagementClient({ photos: initialPhotos }: PhotoMa
         return newSet;
       });
       toast.success('Photo deleted successfully');
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       toast.error('Failed to delete photo');
     }
@@ -124,6 +126,7 @@ export default function PhotoManagementClient({ photos: initialPhotos }: PhotoMa
       ));
       setSelectedPhotos(new Set());
       toast.success(`${selectedPhotos.size} photos updated`);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       toast.error('Failed to update photos');
     }
@@ -140,6 +143,7 @@ export default function PhotoManagementClient({ photos: initialPhotos }: PhotoMa
       setPhotos(prev => prev.filter(photo => !selectedPhotos.has(photo.id)));
       setSelectedPhotos(new Set());
       toast.success(`${selectedPhotos.size} photos deleted`);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       toast.error('Failed to delete photos');
     }

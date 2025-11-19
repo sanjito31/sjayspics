@@ -2,6 +2,7 @@
 
 import prisma from "@/lib/prisma";
 import { PhotoAllResponse } from "@/lib/types/photo";
+import { revalidatePath } from "next/cache";
 
 export async function getAllPhotos(): Promise<PhotoAllResponse[]> {
     return prisma.photo.findMany({
@@ -36,17 +37,21 @@ export async function getPhotoStats() {
 }
 
 export async function updatePhotoVisibility(photoId: string, isPublic: boolean) {
-    return prisma.photo.update({
+    const result = await prisma.photo.update({
         where: { id: photoId },
         data: { isPublic }
     });
+    revalidatePath('/');
+    return result;
 }
 
 export async function deletePhoto(photoId: string) {
     // Delete from database (Cloudinary cleanup would be handled separately)
-    return prisma.photo.delete({
+    const result = await prisma.photo.delete({
         where: { id: photoId }
     });
+    revalidatePath('/');
+    return result;
 }
 
 export async function searchPhotos(query: string): Promise<PhotoAllResponse[]> {
@@ -67,18 +72,22 @@ export async function searchPhotos(query: string): Promise<PhotoAllResponse[]> {
 }
 
 export async function bulkUpdateVisibility(photoIds: string[], isPublic: boolean) {
-    return prisma.photo.updateMany({
+    const result = await prisma.photo.updateMany({
         where: {
             id: { in: photoIds }
         },
         data: { isPublic }
     });
+    revalidatePath('/');
+    return result;
 }
 
 export async function bulkDeletePhotos(photoIds: string[]) {
-    return prisma.photo.deleteMany({
+    const result = await prisma.photo.deleteMany({
         where: {
             id: { in: photoIds }
         }
     });
+    revalidatePath('/');
+    return result;
 }
